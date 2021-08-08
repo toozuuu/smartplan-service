@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
         UserAddress address = modelMapperUtil.convertToEntity(userDTO.getAddress());
         address.setUserId(user);
         addressRepository.save(address);
-        userDTO.getCaloriePlanList().forEach(detail ->{
+        userDTO.getCaloriePlanList().forEach(detail -> {
             CaloriePlan caloriePlan = modelMapperUtil.convertToEntity(detail);
             caloriePlan.setUserId(user);
             caloriePlanRepository.save(caloriePlan);
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO login(UserDTO userDTO) {
         userDTO.setCreated(new Date());
         User user = userRepository.findByEmailAndPassword(userDTO.getEmail(), userDTO.getPassword());
-        if(user != null) {
+        if (user != null && user.getStatus().equals("ACTIVE")) {
             long numOfDays = new Date().getTime() - user.getCreated().getTime();
             List<CaloriePlanDTO> caloriePlans = user.getCaloriePlanCollection().stream().map(modelMapperUtil::convertToDTO).
                     collect(Collectors.toList());
@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
     public AddressDTO updateAddress(AddressDTO addressDTO) {
 
         Optional<UserAddress> optional = addressRepository.findById(addressDTO.getId());
-        if(optional.isPresent()) {
+        if (optional.isPresent()) {
             UserAddress userAddress = optional.get();
             userAddress.setAdrdess(addressDTO.getAdrdess());
             return modelMapperUtil.convertToDTO(addressRepository.save(userAddress));
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO updateUser(UserDTO userDTO) {
 
         Optional<User> optional = userRepository.findById(userDTO.getId());
-        if(optional.isPresent()) {
+        if (optional.isPresent()) {
 
             User user = optional.get();
             user.setAge(userDTO.getAge());
@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
             user.setGoalType(userDTO.getGoalType());
             user.setGoalTime(userDTO.getGoalTime());
             updateDetails(userDTO, user);
-            if(!userDTO.getMacronutrientFoodList().isEmpty()) {
+            if (!userDTO.getMacronutrientFoodList().isEmpty()) {
                 macronutrientFoodRepository.deleteAll(user.getMacronutrientFoodCollection());
                 updateMacronutrientFood(userDTO.getMacronutrientFoodList(), user);
             }
@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO recalculate(UserDTO userDTO) {
         Optional<User> optional = userRepository.findById(userDTO.getId());
-        if(optional.isPresent()) {
+        if (optional.isPresent()) {
 
             User user = optional.get();
             user.setAge(userDTO.getAge());
