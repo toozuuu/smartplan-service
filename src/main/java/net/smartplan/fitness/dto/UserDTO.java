@@ -35,4 +35,5 @@ public class UserDTO {
     private boolean isSuccess;
     private Date created;
     private long numOfDays;
+    private String status = "PENDING";
 }

@@ -82,6 +82,9 @@ public class User implements Serializable {
     @Column(name = "consulter")
     private String consulter;
 
+    @Column(name = "status")
+    private String status;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;

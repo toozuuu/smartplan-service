@@ -60,12 +60,4 @@ public class FileDataPersistService {
         return fileID;
     }
 
-    boolean deleteImage(String uuid){
-        fileStorageRepository.deleteById(uuid);
-        return  true;
-    }
-    String getImageAbsolutePath(String uuid){
-        return fileStorageRepository.findByFileId(uuid).getAbsolutePath();
-    }
-
 }

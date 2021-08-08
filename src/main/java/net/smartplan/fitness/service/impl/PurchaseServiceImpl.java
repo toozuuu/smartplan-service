@@ -30,7 +30,6 @@ public class PurchaseServiceImpl implements PurchaseService {
     private final ModelMapperUtil mapperUtil;
     private final EmailService emailService;
     private final MealRepository mealRepository;
-    private final CartService cartService;
 
     public PurchaseServiceImpl(PurchaseRepository purchaseRepository,
                                PurchaseDetailsRepository detailsRepository,
@@ -41,7 +40,6 @@ public class PurchaseServiceImpl implements PurchaseService {
         this.mapperUtil = mapperUtil;
         this.emailService = emailService;
         this.mealRepository = mealRepository;
-        this.cartService = cartService;
     }
 
     @Override
@@ -54,7 +52,6 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchaseDTO.getPurchaseDetails().forEach(detail -> {
             PurchaseDetails purchaseDetails = mapperUtil.convertToEntity(detail);
             purchaseDetails.setPurchaseId(purchase);
-           // cartService.deleteMealAndUserName(detail.getMealId().getId(),purchaseDTO.getEmail());
             detailsRepository.save(purchaseDetails);
             Optional<Meal> meal = mealRepository.findById(detail.getMealId().getId());
             String name = "";

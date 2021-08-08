@@ -27,8 +27,8 @@ import java.util.UUID;
 public class FileServiceImpl implements FileService {
 
     private final Path fileStorageLocation;
-    private FileDataPersistService fileDataPersistService;
-    private String uploadDirectory;
+    private final FileDataPersistService fileDataPersistService;
+    private final String uploadDirectory;
 
     @Autowired
     public FileServiceImpl(FileDataPersistService fileDataPersistService,
@@ -114,15 +114,4 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    public boolean deleteFile(String uuid) {
-        File file = new File(fileDataPersistService.getImageAbsolutePath(uuid));
-        if (file.delete()) {
-            log.info("file.txt File deleted from Project root directory");
-            fileDataPersistService.deleteImage(uuid);
-            return true;
-        } else {
-            log.info("File file.txt doesn't exist in the project root directory");
-            return false;
-        }
-    }
 }
