@@ -1,6 +1,7 @@
 package net.smartplan.fitness.service;
 
 import net.smartplan.fitness.dto.AddressDTO;
+import net.smartplan.fitness.dto.UpdateUserStatusDTO;
 import net.smartplan.fitness.dto.UserDTO;
 
 import java.util.List;
@@ -15,7 +16,9 @@ public interface UserService {
 
     AddressDTO updateAddress(AddressDTO addressDTO);
 
-     UserDTO updateUser(UserDTO userDTO);
+    UpdateUserStatusDTO updateUserStatus(UpdateUserStatusDTO updateUserStatusDTO);
+
+    UserDTO updateUser(UserDTO userDTO);
 
     UserDTO recalculate(UserDTO userDTO);
 

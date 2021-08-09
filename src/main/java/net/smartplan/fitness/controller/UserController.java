@@ -1,6 +1,7 @@
 package net.smartplan.fitness.controller;
 
 import net.smartplan.fitness.dto.AddressDTO;
+import net.smartplan.fitness.dto.UpdateUserStatusDTO;
 import net.smartplan.fitness.dto.UserDTO;
 import net.smartplan.fitness.response.CommonResponse;
 import net.smartplan.fitness.service.UserService;
@@ -41,6 +42,11 @@ public class UserController {
     @PostMapping("/updateAddress")
     public AddressDTO updateAddress(@RequestBody AddressDTO dto) {
         return userService.updateAddress(dto);
+    }
+
+    @PostMapping("/updateUserStatus")
+    public UpdateUserStatusDTO updateUserStatus(@RequestBody UpdateUserStatusDTO dto) {
+        return userService.updateUserStatus(dto);
     }
 
     @PostMapping("/update")

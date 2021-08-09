@@ -1,9 +1,6 @@
 package net.smartplan.fitness.service.impl;
 
-import net.smartplan.fitness.dto.AddressDTO;
-import net.smartplan.fitness.dto.CaloriePlanDTO;
-import net.smartplan.fitness.dto.MacronutrientFoodDTO;
-import net.smartplan.fitness.dto.UserDTO;
+import net.smartplan.fitness.dto.*;
 import net.smartplan.fitness.entity.CaloriePlan;
 import net.smartplan.fitness.entity.MacronutrientFood;
 import net.smartplan.fitness.entity.User;
@@ -114,6 +111,18 @@ public class UserServiceImpl implements UserService {
             return new AddressDTO();
         }
 
+    }
+
+    @Override
+    public UpdateUserStatusDTO updateUserStatus(UpdateUserStatusDTO updateUserStatusDTO) {
+        User user = userRepository.findByEmail(updateUserStatusDTO.getEmail());
+        if (user != null) {
+            user.setStatus(updateUserStatusDTO.getStatus());
+            userRepository.save(user);
+            return updateUserStatusDTO;
+        } else {
+            return new UpdateUserStatusDTO();
+        }
     }
 
     @Override
