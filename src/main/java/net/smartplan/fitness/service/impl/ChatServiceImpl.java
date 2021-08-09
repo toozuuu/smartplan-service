@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@Transactional(rollbackFor = Exception.class, transactionManager = "tenantTransactionManager")
+@Transactional(rollbackFor = Exception.class)
 public class ChatServiceImpl implements ChatService {
 
     private final ChatRoomRepository chatRoomRepository;
@@ -34,18 +34,18 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public ChatMessagesDTO saveChatMessage(ChatMessagesDTO messagesDTO) {
-        try{
-            ChatRoom room ;
-            ChatMessages chatMessages=  new ChatMessages();
+        try {
+            ChatRoom room;
+            ChatMessages chatMessages = new ChatMessages();
             ChatRoom chatroom = chatRoomRepository.findBySenderAndReceiver(messagesDTO.getSender(), messagesDTO.getReceiver());
 
-            if (chatroom ==null){
+            if (chatroom == null) {
                 chatroom = chatRoomRepository.findBySenderAndReceiver(messagesDTO.getReceiver(), messagesDTO.getSender());
             }
 
-            if (chatroom!=null){
+            if (chatroom != null) {
 
-                if( !messagesDTO.getSender().equals("ADMIN")){
+                if (!messagesDTO.getSender().equals("ADMIN")) {
 //                    net.epic.commons.config.security.dto.UserDTO buyerPic = authServiceClient.getUserDetails(TenantContextHolder.getTenant(), messagesDTO.getSender());
 //                    if(buyerPic!=null){
 //                        if(buyerPic.getImageUrl()!=null){
@@ -60,8 +60,8 @@ public class ChatServiceImpl implements ChatService {
                 chatMessages.setChatRoomId(chatroom);
                 chatroom.setUpdated(new Date());
                 chatRoomRepository.save(chatroom);
-            }else{
-                room =  new ChatRoom();
+            } else {
+                room = new ChatRoom();
 
 //                net.epic.commons.config.security.dto.UserDTO buyerPic = authServiceClient.getUserDetails(TenantContextHolder.getTenant(), messagesDTO.getSender());
 //                if( !messagesDTO.getSender().equals("ADMIN")){
@@ -92,7 +92,7 @@ public class ChatServiceImpl implements ChatService {
 
             chatMessagesRepository.save(chatMessages);
             return messagesDTO;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -102,36 +102,36 @@ public class ChatServiceImpl implements ChatService {
     public List<ChatRoomDTO> fetchChatRoomList(String sender) {
         List<ChatRoomDTO> dtoList = new ArrayList<>();
         ChatRoomDTO dto;
-        List<ChatRoom> chatRoomList = chatRoomRepository.findAllBySenderOrReceiver(sender,sender);
+        List<ChatRoom> chatRoomList = chatRoomRepository.findAllBySenderOrReceiver(sender, sender);
 
-        if(chatRoomList!=null){
+        if (chatRoomList != null) {
             ChatMessages chatMessages = new ChatMessages();
-            for (ChatRoom room:chatRoomList) {
-                dto= new ChatRoomDTO();
+            for (ChatRoom room : chatRoomList) {
+                dto = new ChatRoomDTO();
                 dto.setChatRoomId(room.getChatRoomId());
                 dto.setReceiver(room.getReceiver());
                 dto.setSender(room.getSender());
 
-                if(room.getChatMessagesCollection().size()>0){
+                if (!room.getChatMessagesCollection().isEmpty()) {
                     dto.setMsgCount(room.getChatMessagesCollection().size());
                     for (ChatMessages element : room.getChatMessagesCollection()) {
                         chatMessages = element;
                     }
 
                     dto.setLastTime(chatMessages.getTime());
-                }else{
+                } else {
                     dto.setMsgCount(0);
                 }
 
-                List<ChatMessages> notDelivered = chatMessagesRepository.findAllByChatRoomIdAndSenderEqualsAndStatusEquals(room, room.getReceiver(),"NEW");
-                dto.setNewMessageCount(Math.max(notDelivered.size(), 0));
+                List<ChatMessages> notDelivered = chatMessagesRepository.findAllByChatRoomIdAndSenderEqualsAndStatusEquals(room, room.getReceiver(), "NEW");
+                dto.setNewMessageCount(notDelivered.size());
 
                 dtoList.add(dto);
             }
 
             return dtoList;
-        }else{
-            return null;
+        } else {
+            return new ArrayList<>();
         }
     }
 
@@ -141,10 +141,10 @@ public class ChatServiceImpl implements ChatService {
         ChatMessagesDTO dto;
         Optional<ChatRoom> chatRoomList = chatRoomRepository.findById(Integer.parseInt(chatRoomID));
 
-        if(chatRoomList.isPresent()){
-            if(!chatRoomList.get().getChatMessagesCollection().isEmpty()){
-                for (ChatMessages messages :chatRoomList.get().getChatMessagesCollection()) {
-                    dto= new ChatMessagesDTO();
+        if (chatRoomList.isPresent()) {
+            if (!chatRoomList.get().getChatMessagesCollection().isEmpty()) {
+                for (ChatMessages messages : chatRoomList.get().getChatMessagesCollection()) {
+                    dto = new ChatMessagesDTO();
                     dto.setChatMessagesId(messages.getChatMessagesId());
                     dto.setReceiver(messages.getReceiver());
                     dto.setSender(messages.getSender());
@@ -158,21 +158,21 @@ public class ChatServiceImpl implements ChatService {
 
 
             return dtoList;
-        }else{
+        } else {
             return null;
         }
     }
 
     @Override
-    public ChatMessagesDTO setAsDeliveredByChatRoomId(String chatRoomID  ,String sender) {
+    public ChatMessagesDTO setAsDeliveredByChatRoomId(String chatRoomID, String sender) {
         ChatMessagesDTO dto = new ChatMessagesDTO();
         dto.setContent("Set AS Delivered");
         Optional<ChatRoom> chatRoomList = chatRoomRepository.findById(Integer.parseInt(chatRoomID));
 
-        if(chatRoomList.isPresent()){
+        if (chatRoomList.isPresent()) {
             ChatRoom room = chatRoomList.get();
             List<ChatMessages> notDelivered = chatMessagesRepository.findAllByChatRoomIdAndSenderEqualsAndStatusEquals(room, sender, "NEW");
-            if(notDelivered.size()>0){
+            if (notDelivered.size() > 0) {
                 for (ChatMessages messages : notDelivered) {
                     messages.setStatus("DELIVERED");
                     messages.setDeliveredTime(new Date());
@@ -187,26 +187,26 @@ public class ChatServiceImpl implements ChatService {
     public List<AdminChatRoomDTO> fetchAdminChatRoomList(String sender) {
         List<AdminChatRoomDTO> dtoList = new ArrayList<>();
         List<net.smartplan.fitness.dto.ChatMessagesDTO> chatMessagesDTOList;
-        ChatMessagesDTO messagesDTO ;
+        ChatMessagesDTO messagesDTO;
         AdminChatRoomDTO dto;
-        List<ChatRoom> chatRoomList = chatRoomRepository.findAllBySenderOrReceiverOrderByUpdatedDesc(sender,sender);
-        int newMessageCount=0;
+        List<ChatRoom> chatRoomList = chatRoomRepository.findAllBySenderOrReceiverOrderByUpdatedDesc(sender, sender);
+        int newMessageCount = 0;
 
-        if(chatRoomList!=null){
+        if (chatRoomList != null) {
             ChatMessages chatMessages = new ChatMessages();
-            for (ChatRoom room:chatRoomList) {
-                newMessageCount=0;
+            for (ChatRoom room : chatRoomList) {
+                newMessageCount = 0;
 
-                dto= new AdminChatRoomDTO();
+                dto = new AdminChatRoomDTO();
                 dto.setChatRoomId(room.getChatRoomId());
                 dto.setReceiver(room.getReceiver());
                 dto.setSender(room.getSender());
 
                 chatMessagesDTOList = new ArrayList<>();
-                if(room.getChatMessagesCollection().size()>0){
+                if (room.getChatMessagesCollection().size() > 0) {
 
                     for (ChatMessages messages : room.getChatMessagesCollection()) {
-                        messagesDTO =  new ChatMessagesDTO();
+                        messagesDTO = new ChatMessagesDTO();
                         messagesDTO.setChatMessagesId(messages.getChatMessagesId());
                         messagesDTO.setReceiver(messages.getReceiver());
                         messagesDTO.setSender(messages.getSender());
@@ -217,8 +217,8 @@ public class ChatServiceImpl implements ChatService {
                         chatMessagesDTOList.add(messagesDTO);
                         chatMessages = messages;
 
-                        if(!messagesDTO.getSender().equals("ADMIN") && messagesDTO.getStatus().equals("NEW")){
-                            newMessageCount ++;
+                        if (!messagesDTO.getSender().equals("ADMIN") && messagesDTO.getStatus().equals("NEW")) {
+                            newMessageCount++;
                         }
 
                     }
@@ -235,7 +235,7 @@ public class ChatServiceImpl implements ChatService {
             }
 
             return dtoList;
-        }else{
+        } else {
             return null;
         }
     }
@@ -243,7 +243,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public String getMessageCount() {
         long count = chatRoomRepository.count();
-        return count+"";
+        return count + "";
     }
 
 
