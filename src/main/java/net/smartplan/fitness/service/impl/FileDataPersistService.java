@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2020. Property of EPIC Lanka Technologies Pvt. Ltd.
- */
-
 package net.smartplan.fitness.service.impl;
 
 import net.smartplan.fitness.entity.FileStorage;
