@@ -27,7 +27,7 @@ public class MealController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity save(@RequestBody MealDTO mealDTO) {
+    public ResponseEntity<CommonResponse> save(@RequestBody MealDTO mealDTO) {
 
         try {
             mealService.save(mealDTO);
@@ -60,7 +60,7 @@ public class MealController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity update(@RequestBody MealDTO mealDTO) {
+    public ResponseEntity<CommonResponse> update(@RequestBody MealDTO mealDTO) {
         mealService.update(mealDTO);
         mealService.updateTotal(mealDTO.getId());
         return new ResponseEntity<>(new CommonResponse(true, "Success"), HttpStatus.OK);

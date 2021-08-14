@@ -26,7 +26,7 @@ public class PurchaseController {
 
     }
     @PostMapping("/save")
-    public ResponseEntity save(@RequestBody PurchaseDTO purchaseDTO) {
+    public ResponseEntity<CommonResponse> save(@RequestBody PurchaseDTO purchaseDTO) {
 
         try {
             purchaseService.save(purchaseDTO);

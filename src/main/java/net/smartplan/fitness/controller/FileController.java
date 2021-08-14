@@ -29,7 +29,7 @@ public class FileController {
     }
 
     @PostMapping("/upload/")
-    public ResponseEntity singleFileUpload(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<CommonResponse> singleFileUpload(@RequestParam("file") MultipartFile file) {
         String fileID = fileService.uploadFile(file);
         log.info(fileID);
         return new ResponseEntity<>(new CommonResponse(true, fileID), HttpStatus.OK);

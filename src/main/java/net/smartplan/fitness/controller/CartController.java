@@ -26,7 +26,7 @@ public class CartController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity save(@RequestBody List<CartDTO> list) {
+    public ResponseEntity<CommonResponse> save(@RequestBody List<CartDTO> list) {
 
         try {
             cartService.save(list);
