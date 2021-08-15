@@ -44,37 +44,11 @@ public class ChatServiceImpl implements ChatService {
             }
 
             if (chatroom != null) {
-
-                if (!messagesDTO.getSender().equals("ADMIN")) {
-//                    net.epic.commons.config.security.dto.UserDTO buyerPic = authServiceClient.getUserDetails(TenantContextHolder.getTenant(), messagesDTO.getSender());
-//                    if(buyerPic!=null){
-//                        if(buyerPic.getImageUrl()!=null){
-//                            chatroom.setProfilePic(buyerPic.getImageUrl());
-//                        }
-//                        if(buyerPic.getName()!=null){
-//                            chatroom.setUsername(buyerPic.getName());
-//                        }
-//                    }
-                }
-
                 chatMessages.setChatRoomId(chatroom);
                 chatroom.setUpdated(new Date());
                 chatRoomRepository.save(chatroom);
             } else {
                 room = new ChatRoom();
-
-//                net.epic.commons.config.security.dto.UserDTO buyerPic = authServiceClient.getUserDetails(TenantContextHolder.getTenant(), messagesDTO.getSender());
-//                if( !messagesDTO.getSender().equals("ADMIN")){
-//                    if(buyerPic!=null){
-//                        if(buyerPic.getImageUrl()!=null){
-//                            room.setProfilePic(buyerPic.getImageUrl());
-//                        }
-//                        if(buyerPic.getName()!=null){
-//                            room.setUsername(buyerPic.getName());
-//                        }
-//                    }
-//                }
-
                 room.setReceiver(messagesDTO.getReceiver());
                 room.setSender(messagesDTO.getSender());
                 room.setUpdated(new Date());
@@ -159,7 +133,7 @@ public class ChatServiceImpl implements ChatService {
 
             return dtoList;
         } else {
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -172,7 +146,7 @@ public class ChatServiceImpl implements ChatService {
         if (chatRoomList.isPresent()) {
             ChatRoom room = chatRoomList.get();
             List<ChatMessages> notDelivered = chatMessagesRepository.findAllByChatRoomIdAndSenderEqualsAndStatusEquals(room, sender, "NEW");
-            if (notDelivered.size() > 0) {
+            if (!notDelivered.isEmpty()) {
                 for (ChatMessages messages : notDelivered) {
                     messages.setStatus("DELIVERED");
                     messages.setDeliveredTime(new Date());
@@ -203,7 +177,7 @@ public class ChatServiceImpl implements ChatService {
                 dto.setSender(room.getSender());
 
                 chatMessagesDTOList = new ArrayList<>();
-                if (room.getChatMessagesCollection().size() > 0) {
+                if (!room.getChatMessagesCollection().isEmpty()) {
 
                     for (ChatMessages messages : room.getChatMessagesCollection()) {
                         messagesDTO = new ChatMessagesDTO();
@@ -236,7 +210,7 @@ public class ChatServiceImpl implements ChatService {
 
             return dtoList;
         } else {
-            return null;
+            return new ArrayList<>();
         }
     }
 

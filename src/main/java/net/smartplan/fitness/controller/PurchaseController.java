@@ -2,6 +2,7 @@ package net.smartplan.fitness.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import net.smartplan.fitness.dto.PurchaseDTO;
+import net.smartplan.fitness.dto.UpdatedPurchaseDetailsDTO;
 import net.smartplan.fitness.response.CommonResponse;
 import net.smartplan.fitness.service.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class PurchaseController {
         this.purchaseService = purchaseService;
 
     }
+
     @PostMapping("/save")
     public ResponseEntity<CommonResponse> save(@RequestBody PurchaseDTO purchaseDTO) {
 
@@ -44,4 +46,21 @@ public class PurchaseController {
         return purchaseService.getAllByUser(email);
     }
 
+    @GetMapping("/getOrders")
+    public List<PurchaseDTO> getAllOrders() {
+        return purchaseService.fetchAllOrders();
+    }
+
+
+    @PostMapping("/updateOrderStatus")
+    public ResponseEntity<CommonResponse> updateOrderStatus(@RequestBody UpdatedPurchaseDetailsDTO updatedPurchaseDetailsDTO) {
+
+        try {
+            purchaseService.updateOrderStatus(updatedPurchaseDetailsDTO);
+            return new ResponseEntity<>(new CommonResponse(true, "Success"), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.toString());
+            return new ResponseEntity<>(new CommonResponse(false, e.toString()), HttpStatus.OK);
+        }
+    }
 }

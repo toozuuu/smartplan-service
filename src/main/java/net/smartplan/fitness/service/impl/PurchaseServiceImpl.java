@@ -1,15 +1,16 @@
 package net.smartplan.fitness.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import net.smartplan.fitness.dto.EmailBodyDTO;
 import net.smartplan.fitness.dto.PurchaseDTO;
 import net.smartplan.fitness.dto.PurchaseDetailsDTO;
+import net.smartplan.fitness.dto.UpdatedPurchaseDetailsDTO;
 import net.smartplan.fitness.entity.Meal;
 import net.smartplan.fitness.entity.Purchase;
 import net.smartplan.fitness.entity.PurchaseDetails;
 import net.smartplan.fitness.repository.MealRepository;
 import net.smartplan.fitness.repository.PurchaseDetailsRepository;
 import net.smartplan.fitness.repository.PurchaseRepository;
-import net.smartplan.fitness.service.CartService;
 import net.smartplan.fitness.service.EmailService;
 import net.smartplan.fitness.service.PurchaseService;
 import net.smartplan.fitness.util.ModelMapperUtil;
@@ -22,6 +23,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @Transactional(rollbackOn = Exception.class)
 public class PurchaseServiceImpl implements PurchaseService {
 
@@ -57,14 +59,14 @@ public class PurchaseServiceImpl implements PurchaseService {
             Optional<Meal> meal = mealRepository.findById(detail.getMealId().getId());
             String name = "";
             address[0] = detail.getShippingAddress();
-            if(meal.isPresent()) {
-                 name = meal.get().getMealName();
+            if (meal.isPresent()) {
+                name = meal.get().getMealName();
             }
             totalPrice[0] += purchaseDetails.getPrice();
-            bodyDTOS.add(createDTO(name,detail.getQuantity(),detail.getPrice()));
+            bodyDTOS.add(createDTO(name, detail.getQuantity(), detail.getPrice()));
 
         });
-        emailService.sendEmailWithTemplate(bodyDTOS,purchase.getEmail(),totalPrice[0],address[0]);
+        emailService.sendEmailWithTemplate(bodyDTOS, purchase.getEmail(), totalPrice[0], address[0]);
         return mapperUtil.convertToDTO(purchase);
     }
 
@@ -72,8 +74,33 @@ public class PurchaseServiceImpl implements PurchaseService {
     public List<PurchaseDTO> getAllByUser(String email) {
 
         List<PurchaseDTO> list = new ArrayList<>();
-        List<Purchase> purchases = purchaseRepository.findAllByEmail(email);
-        purchases.forEach(purchase -> {
+        List<Purchase> purchases = purchaseRepository.findAllByEmailOrderByCreatedDesc(email);
+        return getPurchaseDTOS(list, purchases);
+    }
+
+    @Override
+    public List<PurchaseDTO> fetchAllOrders() {
+        List<PurchaseDTO> list = new ArrayList<>();
+        Iterable<Purchase> all = purchaseRepository.findAll();
+        return getPurchaseDTOS(list, all);
+    }
+
+    @Override
+    public PurchaseDetailsDTO updateOrderStatus(UpdatedPurchaseDetailsDTO updatedPurchaseDetailsDTO) {
+        Optional<PurchaseDetails> purchaseDetails = detailsRepository.findById(updatedPurchaseDetailsDTO.getId());
+
+        if (purchaseDetails.isPresent()) {
+            PurchaseDetails details = purchaseDetails.get();
+            details.setId(details.getId());
+            details.setStatus(updatedPurchaseDetailsDTO.getStatus());
+            detailsRepository.save(details);
+            return mapperUtil.convertToDTO(details);
+        }
+        return new PurchaseDetailsDTO();
+    }
+
+    private List<PurchaseDTO> getPurchaseDTOS(List<PurchaseDTO> list, Iterable<Purchase> all) {
+        all.forEach(purchase -> {
             PurchaseDTO purchaseDTO = mapperUtil.convertToDTO(purchase);
             List<PurchaseDetailsDTO> purchaseDetailsDTOS = purchase.getPurchaseDetailsCollection().stream().
                     map(mapperUtil::convertToDTO).collect(Collectors.toList());

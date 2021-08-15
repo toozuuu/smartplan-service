@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ChatMessagesRepository extends JpaRepository<ChatMessages,Integer> {
-    List<ChatMessages> findAllByChatRoomIdAndStatusEquals(ChatRoom chatRoom, String status);
-    List<ChatMessages> findAllByChatRoomIdAndSenderEqualsAndStatusEquals(ChatRoom chatRoom,String Sender, String status);
+    List<ChatMessages> findAllByChatRoomIdAndSenderEqualsAndStatusEquals(ChatRoom chatRoom,String sender, String status);
 }

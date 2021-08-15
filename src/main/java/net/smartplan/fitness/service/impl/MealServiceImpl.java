@@ -37,6 +37,7 @@ public class MealServiceImpl implements MealService {
     private final ModelMapperUtil modelMapperUtil;
     private final MealIngRepository ingRepository;
     private final CaloriePlanRepository caloriePlanRepository;
+    private static final String DISABLED = "DISABLED";
 
     @Autowired
     public MealServiceImpl(MealRepository mealRepository,
@@ -53,7 +54,7 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public List<MealDTO> getAll() {
-        return mealRepository.findAllByStatusNotOrderByIdDesc("DISABLED").stream().map(modelMapperUtil::convertToDTO).collect(Collectors.toList());
+        return mealRepository.findAllByStatusNotOrderByIdDesc(DISABLED).stream().map(modelMapperUtil::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -62,7 +63,7 @@ public class MealServiceImpl implements MealService {
         Optional<User> user = userRepository.findById(id);
         List<String> foods = new ArrayList<>();
         user.ifPresent(value -> value.getMacronutrientFoodCollection().forEach(detail -> foods.add(detail.getFood())));
-        List<Meal> meals = mealRepository.findAllByStatusNotAndMealIngredientsCollection_IngredientsNameIn("DISABLED",foods);
+        List<Meal> meals = mealRepository.findAllByStatusNotAndMealIngredientsCollection_IngredientsNameIn(DISABLED, foods);
         return meals.stream().distinct().map(modelMapperUtil::convertToDTO).collect(Collectors.toList());
     }
 
@@ -74,7 +75,7 @@ public class MealServiceImpl implements MealService {
         double totalFat = 0;
 
         Meal meal = mealRepository.save(modelMapperUtil.convertToEntity(mealDTO));
-        for(MealIngredientsDTO dto : mealDTO.getMealIngredientsCollection()) {
+        for (MealIngredientsDTO dto : mealDTO.getMealIngredientsCollection()) {
             MealIngredients mealIngredients = modelMapperUtil.convertToEntity(dto);
             mealIngredients.setMealId(meal);
             totalProtein += dto.getProtein();
@@ -95,7 +96,7 @@ public class MealServiceImpl implements MealService {
         Optional<Meal> optional = mealRepository.findById(id);
         if (optional.isPresent()) {
             Meal meal = optional.get();
-            meal.setStatus("DISABLED");
+            meal.setStatus(DISABLED);
             mealRepository.save(meal);
             return true;
         } else {
@@ -110,30 +111,30 @@ public class MealServiceImpl implements MealService {
         List<String> foods = new ArrayList<>();
         user.ifPresent(value -> value.getMacronutrientFoodCollection().forEach(detail -> foods.add(detail.getFood())));
 
-        CaloriePlan NonCaloriePlan = caloriePlanRepository.findByUserId_IdAndType(id, "non-workout");
-        CaloriePlan CaloriePlan = caloriePlanRepository.findByUserId_IdAndType(id, "workout");
+        CaloriePlan nonCaloriePlan = caloriePlanRepository.findByUserId_IdAndType(id, "non-workout");
+        CaloriePlan caloriePlan = caloriePlanRepository.findByUserId_IdAndType(id, "workout");
 
-        double fat = CaloriePlan.getFat()/CaloriePlan.getMealsPerDay();
-        double carbs = CaloriePlan.getCarbs()/CaloriePlan.getMealsPerDay();
-        double pro = CaloriePlan.getProtein()/CaloriePlan.getMealsPerDay();
+        double fat = caloriePlan.getFat() / caloriePlan.getMealsPerDay();
+        double carbs = caloriePlan.getCarbs() / caloriePlan.getMealsPerDay();
+        double pro = caloriePlan.getProtein() / caloriePlan.getMealsPerDay();
 
-        double nonFat = NonCaloriePlan.getFat()/CaloriePlan.getMealsPerDay();
-        double nonCarbs = NonCaloriePlan.getCarbs()/CaloriePlan.getMealsPerDay();
-        double nonPro = NonCaloriePlan.getProtein()/CaloriePlan.getMealsPerDay();
+        double nonFat = nonCaloriePlan.getFat() / caloriePlan.getMealsPerDay();
+        double nonCarbs = nonCaloriePlan.getCarbs() / caloriePlan.getMealsPerDay();
+        double nonPro = nonCaloriePlan.getProtein() / caloriePlan.getMealsPerDay();
 
         List<Meal> workOutMeals = mealRepository.findAllByStatusNotAndTotalCarbsBetweenAndTotalFatBetweenAndTotalProteinBetweenAndMealIngredientsCollection_IngredientsNameIn
-                ("DISABLED",carbs-5,carbs+5,fat-5,fat+5,pro-5,pro+5,foods);
+                (DISABLED, carbs - 5, carbs + 5, fat - 5, fat + 5, pro - 5, pro + 5, foods);
 
         List<Meal> nonWorkOutMeals = mealRepository.findAllByStatusNotAndTotalCarbsBetweenAndTotalFatBetweenAndTotalProteinBetweenAndMealIngredientsCollection_IngredientsNameIn
-                ("DISABLED",nonCarbs-5,nonCarbs+5,nonFat-5,nonFat+5,nonPro-5,nonPro+5,foods);
+                (DISABLED, nonCarbs - 5, nonCarbs + 5, nonFat - 5, nonFat + 5, nonPro - 5, nonPro + 5, foods);
 
-        List<Meal> finalList = Stream.concat(workOutMeals.stream(),nonWorkOutMeals.stream()).collect(Collectors.toList());
+        List<Meal> finalList = Stream.concat(workOutMeals.stream(), nonWorkOutMeals.stream()).collect(Collectors.toList());
 
         return finalList.stream().distinct().map(modelMapperUtil::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public ResponseEntity update(MealDTO mealDTO) {
+    public ResponseEntity<CommonResponse> update(MealDTO mealDTO) {
 
         Meal meal = mealRepository.save(modelMapperUtil.convertToEntity(mealDTO));
         mealDTO.getMealIngredientsCollection().forEach(ing -> {
@@ -146,13 +147,13 @@ public class MealServiceImpl implements MealService {
 
     public void updateTotal(int id) {
         Optional<Meal> optional = mealRepository.findById(id);
-        if(optional.isPresent()) {
+        if (optional.isPresent()) {
             Meal meal = optional.get();
             double totalProtein = 0;
             double totalCarbs = 0;
             double totalFat = 0;
 
-            for(MealIngredients ing : meal.getMealIngredientsCollection()) {
+            for (MealIngredients ing : meal.getMealIngredientsCollection()) {
                 totalProtein += ing.getProtein();
                 totalFat += ing.getFat();
                 totalCarbs += ing.getCarbs();

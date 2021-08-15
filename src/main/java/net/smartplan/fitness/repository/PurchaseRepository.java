@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface PurchaseRepository extends CrudRepository<Purchase, Integer> {
 
-    List<Purchase> findAllByEmail(String email);
+    List<Purchase> findAllByEmailOrderByCreatedDesc(String email);
+
 
 }
