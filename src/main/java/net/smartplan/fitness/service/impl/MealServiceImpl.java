@@ -134,7 +134,7 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public ResponseEntity<CommonResponse> update(MealDTO mealDTO) {
+    public void update(MealDTO mealDTO) {
 
         Meal meal = mealRepository.save(modelMapperUtil.convertToEntity(mealDTO));
         mealDTO.getMealIngredientsCollection().forEach(ing -> {
@@ -142,7 +142,7 @@ public class MealServiceImpl implements MealService {
             mealIngredients.setMealId(meal);
             ingRepository.save(mealIngredients);
         });
-        return new ResponseEntity<>(new CommonResponse(true, "Success"), HttpStatus.OK);
+        new ResponseEntity<>(new CommonResponse(true, "Success"), HttpStatus.OK);
     }
 
     public void updateTotal(int id) {

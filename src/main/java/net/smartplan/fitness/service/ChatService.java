@@ -8,10 +8,15 @@ import java.util.List;
 
 public interface ChatService {
     ChatMessagesDTO saveChatMessage(ChatMessagesDTO messagesDTO);
+
     List<ChatRoomDTO> fetchChatRoomList(String sender);
+
     List<ChatMessagesDTO> fetchMessagesByChatRoomId(String chatRoomID);
-    ChatMessagesDTO setAsDeliveredByChatRoomId(String chatRoomID ,String sender);
+
+    ChatMessagesDTO setAsDeliveredByChatRoomId(String chatRoomID, String sender);
+
     List<AdminChatRoomDTO> fetchAdminChatRoomList(String sender);
+
     String getMessageCount();
 
 }

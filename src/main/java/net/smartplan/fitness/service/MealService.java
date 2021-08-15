@@ -1,7 +1,6 @@
 package net.smartplan.fitness.service;
 
 import net.smartplan.fitness.dto.MealDTO;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public interface MealService {
 
     List<MealDTO> mealsByUserCalories(int id);
 
-    ResponseEntity update(MealDTO mealDTO);
+    void update(MealDTO mealDTO);
 
     void updateTotal(int id);
 

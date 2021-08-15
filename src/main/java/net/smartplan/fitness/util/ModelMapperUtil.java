@@ -33,11 +33,6 @@ public class ModelMapperUtil {
         return modelMapper.map(user, UserDTO.class);
     }
 
-//    public UserDTO convertToDTOUserStatusUpdate(User user) {
-//        return modelMapper.map(user, UserDTO.class);
-//    }
-
-
     public CaloriePlanDTO convertToDTO(CaloriePlan caloriePlan) {
         return modelMapper.map(caloriePlan,CaloriePlanDTO.class);
     }

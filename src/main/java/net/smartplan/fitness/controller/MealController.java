@@ -3,7 +3,6 @@ package net.smartplan.fitness.controller;
 import lombok.extern.slf4j.Slf4j;
 import net.smartplan.fitness.dto.MealDTO;
 import net.smartplan.fitness.response.CommonResponse;
-import net.smartplan.fitness.service.EmailService;
 import net.smartplan.fitness.service.MealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,8 +20,7 @@ public class MealController {
     private final MealService mealService;
 
     @Autowired
-    public MealController(MealService mealService,
-                          EmailService emailService) {
+    public MealController(MealService mealService) {
         this.mealService = mealService;
     }
 
