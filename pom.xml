@@ -6,13 +6,26 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.3.3.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
-    <groupId>net.kplan</groupId>
+    <groupId>net.smartPlan</groupId>
     <artifactId>fitness</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>fitness</name>
-    <description>Demo project for Spring Boot</description>
+    <description>CCCU project for Spring Boot</description>
+
+    <developers>
+        <developer>
+            <name>H.D.Sachin Dilshan Nandana</name>
+            <email>SN366@canterbury.ac.uk</email>
+            <url>https://www.linkedin.com/in/sachin-dilshan-5535611a5/</url>
+            <organization>Saegis Campus</organization>
+            <roles>
+                <role>Software Engineer</role>
+            </roles>
+        </developer>
+    </developers>
+
 
     <properties>
         <java.version>1.8</java.version>
@@ -77,7 +90,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-        <finalName>k-plan-service</finalName>
+        <finalName>smart-plan-service</finalName>
     </build>
 
 </project>
