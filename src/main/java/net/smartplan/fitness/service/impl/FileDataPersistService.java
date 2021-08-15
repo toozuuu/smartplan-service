@@ -20,7 +20,7 @@ public class FileDataPersistService {
         this.fileStorageRepository = fileStorageRepository;
     }
 
-    String persistToDB(String relativePath, String absolutePath, String fileType, String fileName, String fileID) {
+    void persistToDB(String relativePath, String absolutePath, String fileType, String fileName, String fileID) {
         FileStorage fileStorage = new FileStorage();
         fileStorage.setCreatedTime(new Date());
         fileStorage.setUpdatedTime(new Date());
@@ -32,7 +32,6 @@ public class FileDataPersistService {
 
         fileStorageRepository.save(fileStorage);
 
-        return fileID;
     }
 
 }

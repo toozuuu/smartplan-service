@@ -96,7 +96,7 @@ public class FileServiceImpl implements FileService {
      * Method to resolve {@link org.springframework.http.MediaType} from the file extension
      *
      * @param ext Extension of the uploaded file
-     * @return The media type from the associated with the extention
+     * @return The media type from the associated with the extension
      */
     private String resolveMediaTypeByExtension(String ext) {
         switch (ext) {
