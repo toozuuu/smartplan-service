@@ -34,7 +34,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     public PurchaseServiceImpl(PurchaseRepository purchaseRepository,
                                PurchaseDetailsRepository detailsRepository,
                                ModelMapperUtil mapperUtil, EmailService emailService,
-                               MealRepository mealRepository, CartService cartService) {
+                               MealRepository mealRepository) {
         this.purchaseRepository = purchaseRepository;
         this.detailsRepository = detailsRepository;
         this.mapperUtil = mapperUtil;
@@ -52,6 +52,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchaseDTO.getPurchaseDetails().forEach(detail -> {
             PurchaseDetails purchaseDetails = mapperUtil.convertToEntity(detail);
             purchaseDetails.setPurchaseId(purchase);
+            purchaseDetails.setStatus(detail.getStatus());
             detailsRepository.save(purchaseDetails);
             Optional<Meal> meal = mealRepository.findById(detail.getMealId().getId());
             String name = "";
@@ -87,7 +88,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         EmailBodyDTO dto = new EmailBodyDTO();
         dto.setName(name);
         dto.setQuantity(Double.toString(qty));
-        dto.setAmount("Rs. ".concat(Double.toString(amount)));
+        dto.setAmount("$. ".concat(Double.toString(amount)));
         return dto;
     }
 }

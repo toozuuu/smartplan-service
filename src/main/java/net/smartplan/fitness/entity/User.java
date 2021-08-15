@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Sahan
+ * @author H.D. Sachin Dilshan
  */
 @Entity
 @Table(name = "user")

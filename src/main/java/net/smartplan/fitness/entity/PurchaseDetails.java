@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Sahan
+ * @author H.D. Sachin Dilshan
  */
 @Entity
 @Table(name = "purchase_details")
@@ -48,6 +48,8 @@ public class PurchaseDetails implements Serializable {
     private String orderTime;
     @Column(name = "quantity")
     private Double quantity;
+    @Column(name = "status")
+    private String status;
     @Lob
     @Column(name = "shipping_address")
     private String shippingAddress;
