@@ -18,9 +18,9 @@ public interface UserService {
 
     UpdateUserStatusDTO updateUserStatus(UpdateUserStatusDTO updateUserStatusDTO);
 
-    UserDTO updateUser(UserDTO userDTO);
+    void updateUser(UserDTO userDTO);
 
-    UserDTO recalculate(UserDTO userDTO);
+    void recalculate(UserDTO userDTO);
 
     List<UserDTO> getAll();
 }

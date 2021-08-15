@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUser(UserDTO userDTO) {
+    public void updateUser(UserDTO userDTO) {
 
         Optional<User> optional = userRepository.findById(userDTO.getId());
         if (optional.isPresent()) {
@@ -145,15 +145,13 @@ public class UserServiceImpl implements UserService {
                 caloriePlanRepository.deleteAll(user.getCaloriePlanCollection());
                 updateCaloriePlan(userDTO.getCaloriePlanList(), user);
             }
-            return modelMapperUtil.convertToDTO(user);
+            modelMapperUtil.convertToDTO(user);
 
-        } else {
-            return null;
         }
     }
 
     @Override
-    public UserDTO recalculate(UserDTO userDTO) {
+    public void recalculate(UserDTO userDTO) {
         Optional<User> optional = userRepository.findById(userDTO.getId());
         if (optional.isPresent()) {
 
@@ -166,9 +164,7 @@ public class UserServiceImpl implements UserService {
                 caloriePlanRepository.deleteAll(user.getCaloriePlanCollection());
                 updateCaloriePlan(userDTO.getCaloriePlanList(), user);
             }
-            return modelMapperUtil.convertToDTO(user);
-        } else {
-            return null;
+            modelMapperUtil.convertToDTO(user);
         }
     }
 
