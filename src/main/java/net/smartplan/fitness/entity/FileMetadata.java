@@ -6,6 +6,10 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
+/**
+ * @author H.D. Sachin Dilshan
+ */
+
 @Entity
 @Table(name = "file_metadata")
 @XmlRootElement

@@ -4,6 +4,12 @@ import net.smartplan.fitness.dto.MealDTO;
 
 import java.util.List;
 
+
+/**
+ * @author H.D. Sachin Dilshan
+ */
+
+
 public interface MealService {
 
     List<MealDTO> getAll();

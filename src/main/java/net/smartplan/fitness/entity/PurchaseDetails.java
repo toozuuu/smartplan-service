@@ -17,9 +17,9 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
  * @author H.D. Sachin Dilshan
  */
+
 @Entity
 @Table(name = "purchase_details")
 @XmlRootElement

@@ -5,6 +5,10 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * @author H.D. Sachin Dilshan
+ */
+
 @Entity
 @Table(name = "cart")
 @XmlRootElement

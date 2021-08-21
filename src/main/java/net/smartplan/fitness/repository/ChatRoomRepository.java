@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * @author H.D. Sachin Dilshan
+ */
 
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom,Integer> {

@@ -21,9 +21,9 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
  * @author H.D. Sachin Dilshan
  */
+
 @Entity
 @Table(name = "meal")
 @XmlRootElement

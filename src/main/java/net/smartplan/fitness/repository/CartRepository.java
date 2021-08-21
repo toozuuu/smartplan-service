@@ -5,6 +5,10 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
+/**
+ * @author H.D. Sachin Dilshan
+ */
+
 public interface CartRepository extends CrudRepository<Cart,Integer> {
 
     List<Cart> findAllByEmail(String email);

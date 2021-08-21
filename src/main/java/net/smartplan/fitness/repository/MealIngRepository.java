@@ -5,7 +5,10 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
+/**
+ * @author H.D. Sachin Dilshan
+ */
+
 public interface MealIngRepository extends CrudRepository<MealIngredients, Integer> {
 
-    List<MealIngredients> findAllByMealId_Id(int id);
 }

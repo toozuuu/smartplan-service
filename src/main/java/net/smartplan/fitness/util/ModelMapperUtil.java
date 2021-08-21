@@ -6,6 +6,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+/**
+ * @author H.D. Sachin Dilshan
+ */
+
+
 @Service
 public class ModelMapperUtil {
 
@@ -22,7 +28,7 @@ public class ModelMapperUtil {
     }
 
     public CaloriePlan convertToEntity(CaloriePlanDTO dto) {
-        return modelMapper.map(dto,CaloriePlan.class);
+        return modelMapper.map(dto, CaloriePlan.class);
     }
 
     public MacronutrientFood convertToEntity(MacronutrientFoodDTO dto) {
@@ -34,7 +40,7 @@ public class ModelMapperUtil {
     }
 
     public CaloriePlanDTO convertToDTO(CaloriePlan caloriePlan) {
-        return modelMapper.map(caloriePlan,CaloriePlanDTO.class);
+        return modelMapper.map(caloriePlan, CaloriePlanDTO.class);
     }
 
     public MacronutrientFoodDTO convertToDTO(MacronutrientFood macronutrientFood) {
@@ -62,15 +68,17 @@ public class ModelMapperUtil {
     }
 
     public PurchaseDTO convertToDTO(Purchase purchase) {
-        return modelMapper.map(purchase,PurchaseDTO.class);
+        return modelMapper.map(purchase, PurchaseDTO.class);
     }
 
     public PurchaseDetails convertToEntity(PurchaseDetailsDTO purchaseDetailsDTO) {
         return modelMapper.map(purchaseDetailsDTO, PurchaseDetails.class);
     }
+
     public PurchaseDetailsDTO convertToDTO(PurchaseDetails purchaseDetails) {
         return modelMapper.map(purchaseDetails, PurchaseDetailsDTO.class);
     }
+
     public MealIngredients convertToEntity(MealIngredientsDTO mealIngredientsDTO) {
         return modelMapper.map(mealIngredientsDTO, MealIngredients.class);
     }
@@ -78,6 +86,7 @@ public class ModelMapperUtil {
     public Cart convertToEntity(CartDTO cartDTO) {
         return modelMapper.map(cartDTO, Cart.class);
     }
+
     public CartDTO convertToDTO(Cart cart) {
         return modelMapper.map(cart, CartDTO.class);
     }

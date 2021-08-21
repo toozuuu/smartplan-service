@@ -7,6 +7,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * @author H.D. Sachin Dilshan
+ */
+
 @Entity
 @Table(name = "file_storage")
 @XmlRootElement

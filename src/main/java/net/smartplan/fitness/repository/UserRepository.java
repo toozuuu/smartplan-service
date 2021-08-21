@@ -5,11 +5,13 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
+/**
+ * @author H.D. Sachin Dilshan
+ */
+
 public interface UserRepository extends CrudRepository<User, Integer> {
 
     User findByEmail(String email);
-
-    User findByEmailAndPassword(String email, String password);
 
     List<User> findAll();
 }

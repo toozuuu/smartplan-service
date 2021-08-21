@@ -6,6 +6,11 @@ import net.smartplan.fitness.dto.UserDTO;
 
 import java.util.List;
 
+
+/**
+ * @author H.D. Sachin Dilshan
+ */
+
 public interface UserService {
 
     UserDTO register(UserDTO userDTO);

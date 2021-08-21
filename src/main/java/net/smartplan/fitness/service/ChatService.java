@@ -6,6 +6,12 @@ import net.smartplan.fitness.dto.ChatRoomDTO;
 
 import java.util.List;
 
+
+/**
+ * @author H.D. Sachin Dilshan
+ */
+
+
 public interface ChatService {
     ChatMessagesDTO saveChatMessage(ChatMessagesDTO messagesDTO);
 

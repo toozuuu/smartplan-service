@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * @author H.D. Sachin Dilshan
  */
+
 @Entity
 @Table(name = "user")
 @XmlRootElement

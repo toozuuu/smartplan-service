@@ -9,6 +9,10 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
+/**
+ * @author H.D. Sachin Dilshan
+ */
+
 @Entity
 @Table(name = "chat_room")
 @XmlRootElement
