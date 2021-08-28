@@ -63,6 +63,10 @@ public class ModelMapperUtil {
         return modelMapper.map(mealDTO, Meal.class);
     }
 
+    public IdentifyTrace convertToEntity(IdentifyTraceDTO identifyTraceDTO) {
+        return modelMapper.map(identifyTraceDTO, IdentifyTrace.class);
+    }
+
     public Purchase convertToEntity(PurchaseDTO purchaseDTO) {
         return modelMapper.map(purchaseDTO, Purchase.class);
     }

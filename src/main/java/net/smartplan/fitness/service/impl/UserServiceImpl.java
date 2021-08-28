@@ -2,14 +2,8 @@ package net.smartplan.fitness.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import net.smartplan.fitness.dto.*;
-import net.smartplan.fitness.entity.CaloriePlan;
-import net.smartplan.fitness.entity.MacronutrientFood;
-import net.smartplan.fitness.entity.User;
-import net.smartplan.fitness.entity.UserAddress;
-import net.smartplan.fitness.repository.AddressRepository;
-import net.smartplan.fitness.repository.CaloriePlanRepository;
-import net.smartplan.fitness.repository.MacronutrientFoodRepository;
-import net.smartplan.fitness.repository.UserRepository;
+import net.smartplan.fitness.entity.*;
+import net.smartplan.fitness.repository.*;
 import net.smartplan.fitness.service.UserService;
 import net.smartplan.fitness.util.ModelMapperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +15,9 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
 import javax.transaction.Transactional;
 import java.security.spec.KeySpec;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
@@ -35,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final MacronutrientFoodRepository macronutrientFoodRepository;
     private final ModelMapperUtil modelMapperUtil;
     private final AddressRepository addressRepository;
+    private final IdentifyTraceRepository identifyTraceRepository;
 
     private static final String UNICODE_FORMAT = "UTF8";
     public static final String DEEDED_ENCRYPTION_SCHEME = "DESede";
@@ -47,12 +44,13 @@ public class UserServiceImpl implements UserService {
                            CaloriePlanRepository caloriePlanRepository,
                            MacronutrientFoodRepository macronutrientFoodRepository,
                            ModelMapperUtil modelMapperUtil,
-                           AddressRepository addressRepository) {
+                           AddressRepository addressRepository, IdentifyTraceRepository identifyTraceRepository) {
         this.userRepository = userRepository;
         this.caloriePlanRepository = caloriePlanRepository;
         this.macronutrientFoodRepository = macronutrientFoodRepository;
         this.modelMapperUtil = modelMapperUtil;
         this.addressRepository = addressRepository;
+        this.identifyTraceRepository = identifyTraceRepository;
 
         try {
             String myEncryptionKey = "H.D.SACHIN DILSHAN NANDANA";
@@ -94,6 +92,22 @@ public class UserServiceImpl implements UserService {
             });
             UserDTO dto = modelMapperUtil.convertToDTO(user);
             dto.setAddress(modelMapperUtil.convertToDTO(address));
+
+            IdentifyTraceDTO identifyTraceDTO = new IdentifyTraceDTO();
+            identifyTraceDTO.setEmail(userDTO.getEmail());
+            identifyTraceDTO.setGoalExpiredDate(calendar.getTime().toString());
+
+
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+            Date firstDate = sdf.parse(new Date().toString());
+            Date secondDate = sdf.parse(calendar.getTime().toString());
+
+            long diff = Math.abs(secondDate.getTime() - firstDate.getTime());
+
+            identifyTraceDTO.setGoalDays((double) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
+
+            identifyTraceRepository.save(modelMapperUtil.convertToEntity(identifyTraceDTO));
+
             return dto;
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -192,6 +206,47 @@ public class UserServiceImpl implements UserService {
                 updateCaloriePlan(userDTO.getCaloriePlanList(), user);
             }
             modelMapperUtil.convertToDTO(user);
+
+            List<IdentifyTrace> activeTraces = identifyTraceRepository.findAllByEmailAndStatus(user.getEmail(), "ACTIVE");
+
+            Calendar calendar = Calendar.getInstance();
+
+            calendar.add(Calendar.MONTH, (int) Math.round(userDTO.getGoalTime()));
+
+
+            if (!activeTraces.isEmpty()) {
+                for (IdentifyTrace trace : activeTraces) {
+
+                    IdentifyTraceDTO identifyTraceDTO = new IdentifyTraceDTO();
+                    identifyTraceDTO.setId(trace.getId());
+                    identifyTraceDTO.setStatus("EXPIRED");
+                    identifyTraceDTO.setUpdated(new Date());
+
+                    identifyTraceRepository.save(modelMapperUtil.convertToEntity(identifyTraceDTO));
+
+                }
+            }
+
+
+            try {
+
+                SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+                Date firstDate = sdf.parse(new Date().toString());
+                Date secondDate = sdf.parse(calendar.getTime().toString());
+
+                long diff = Math.abs(secondDate.getTime() - firstDate.getTime());
+
+                IdentifyTraceDTO identifyTraceDTO = new IdentifyTraceDTO();
+
+                identifyTraceDTO.setEmail(user.getEmail());
+                identifyTraceDTO.setGoalExpiredDate(calendar.getTime().toString());
+                identifyTraceDTO.setGoalDays((double) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
+
+                identifyTraceRepository.save(modelMapperUtil.convertToEntity(identifyTraceDTO));
+
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
 
         }
     }

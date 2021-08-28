@@ -46,8 +46,4 @@ public class ChatRoom implements Serializable {
         return chatMessagesCollection;
     }
 
-    public void setChatMessagesCollection(Collection<net.smartplan.fitness.entity.ChatMessages> chatMessagesCollection) {
-        this.chatMessagesCollection = chatMessagesCollection;
-    }
-
 }
