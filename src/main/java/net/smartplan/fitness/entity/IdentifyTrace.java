@@ -37,6 +37,9 @@ public class IdentifyTrace {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "dailyStatus")
+    private Boolean dailyStatus;
+
     @Column(name = "created")
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp

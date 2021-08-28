@@ -299,21 +299,27 @@ public class UserServiceImpl implements UserService {
             IdentifyTraceDTO dto = new IdentifyTraceDTO();
 
             for (IdentifyTrace trace : identifyTrace) {
-                Double tempDays = trace.getGoalDays();
+
+                double tempDays = trace.getGoalDays() - 1;
+
                 if (tempDays > 0) {
                     dto.setStatus(ACTIVE);
-                    dto.setId(trace.getId());
-                    dto.setUpdated(new Date());
-                    dto.setGoalDays(trace.getGoalDays() - tempDays);
-
+                    dto.setGoalDays(trace.getGoalDays() - 1);
                 } else {
                     dto.setStatus(EXPIRED);
-                    dto.setId(trace.getId());
-                    dto.setUpdated(new Date());
                     dto.setGoalDays((double) 0);
                 }
+
+                dto.setEmail(trace.getEmail());
+                dto.setDailyStatus(false);
+                dto.setCreated(trace.getCreated());
+                dto.setGoalExpiredDate(trace.getGoalExpiredDate());
+                dto.setId(trace.getId());
+                dto.setUpdated(new Date());
+
                 identifyTraceRepository.save(modelMapperUtil.convertToEntity(dto));
             }
+
             return dto;
         }
         return new IdentifyTraceDTO();
