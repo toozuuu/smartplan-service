@@ -15,7 +15,9 @@ import net.smartplan.fitness.util.ModelMapperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.*;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
 import javax.transaction.Transactional;
 import java.security.spec.KeySpec;
@@ -68,8 +70,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO register(UserDTO userDTO) {
         try {
-
             userDTO.setPassword(encryptPassword(userDTO.getPassword()));
+
+            Calendar calendar = Calendar.getInstance();
+
+            calendar.add(Calendar.MONTH, (int) Math.round(userDTO.getGoalTime()));
+
+            userDTO.setExpiredGoalDate(calendar.getTime());
 
             User user = userRepository.save(modelMapperUtil.convertToEntity(userDTO));
             UserAddress address = modelMapperUtil.convertToEntity(userDTO.getAddress());

@@ -82,6 +82,9 @@ public class User implements Serializable {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "expiredGoalDate")
+    private Date expiredGoalDate;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
