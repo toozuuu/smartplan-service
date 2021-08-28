@@ -35,6 +35,8 @@ public class UserServiceImpl implements UserService {
 
     private static final String UNICODE_FORMAT = "UTF8";
     public static final String DEEDED_ENCRYPTION_SCHEME = "DESede";
+    public static final String ACTIVE = "ACTIVE";
+    public static final String EXPIRED = "EXPIRED";
     private Cipher cipher;
     byte[] arrayBytes;
     SecretKey key;
@@ -131,7 +133,7 @@ public class UserServiceImpl implements UserService {
             userDTO.setCreated(new Date());
             User user = userRepository.findByEmail(userDTO.getEmail());
             if (decryptPassword(user.getPassword()).equals(userDTO.getPassword())) {
-                if (user.getStatus().equals("ACTIVE")) {
+                if (user.getStatus().equals(ACTIVE)) {
                     long numOfDays = new Date().getTime() - user.getCreated().getTime();
                     List<CaloriePlanDTO> caloriePlans = user.getCaloriePlanCollection().stream().map(modelMapperUtil::convertToDTO).
                             collect(Collectors.toList());
@@ -207,7 +209,7 @@ public class UserServiceImpl implements UserService {
             }
             modelMapperUtil.convertToDTO(user);
 
-            List<IdentifyTrace> activeTraces = identifyTraceRepository.findAllByEmailAndStatus(user.getEmail(), "ACTIVE");
+            List<IdentifyTrace> activeTraces = identifyTraceRepository.findAllByEmailAndStatus(user.getEmail(), ACTIVE);
 
             Calendar calendar = Calendar.getInstance();
 
@@ -219,7 +221,7 @@ public class UserServiceImpl implements UserService {
 
                     IdentifyTraceDTO identifyTraceDTO = new IdentifyTraceDTO();
                     identifyTraceDTO.setId(trace.getId());
-                    identifyTraceDTO.setStatus("EXPIRED");
+                    identifyTraceDTO.setStatus(EXPIRED);
                     identifyTraceDTO.setUpdated(new Date());
 
                     identifyTraceRepository.save(modelMapperUtil.convertToEntity(identifyTraceDTO));
@@ -287,6 +289,34 @@ public class UserServiceImpl implements UserService {
             results.add(dto);
         });
         return results;
+    }
+
+    @Override
+    public IdentifyTraceDTO dailyCheckToDo(IdentifyTraceDTO identifyTraceDTO) {
+        List<IdentifyTrace> identifyTrace = identifyTraceRepository.findAllByEmailAndStatus(identifyTraceDTO.getEmail(), ACTIVE);
+
+        if (!identifyTrace.isEmpty()) {
+            IdentifyTraceDTO dto = new IdentifyTraceDTO();
+
+            for (IdentifyTrace trace : identifyTrace) {
+                Double tempDays = trace.getGoalDays();
+                if (tempDays > 0) {
+                    dto.setStatus(ACTIVE);
+                    dto.setId(trace.getId());
+                    dto.setUpdated(new Date());
+                    dto.setGoalDays(trace.getGoalDays() - tempDays);
+
+                } else {
+                    dto.setStatus(EXPIRED);
+                    dto.setId(trace.getId());
+                    dto.setUpdated(new Date());
+                    dto.setGoalDays((double) 0);
+                }
+                identifyTraceRepository.save(modelMapperUtil.convertToEntity(dto));
+            }
+            return dto;
+        }
+        return new IdentifyTraceDTO();
     }
 
     private void updateDetails(UserDTO userDTO, User user) {

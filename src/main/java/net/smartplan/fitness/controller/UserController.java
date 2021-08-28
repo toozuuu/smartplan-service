@@ -1,6 +1,7 @@
 package net.smartplan.fitness.controller;
 
 import net.smartplan.fitness.dto.AddressDTO;
+import net.smartplan.fitness.dto.IdentifyTraceDTO;
 import net.smartplan.fitness.dto.UpdateUserStatusDTO;
 import net.smartplan.fitness.dto.UserDTO;
 import net.smartplan.fitness.response.CommonResponse;
@@ -69,5 +70,9 @@ public class UserController {
         return userService.getAll();
     }
 
+    @PostMapping("/daily/checkToDo")
+    public IdentifyTraceDTO dailyCheckToDo(@RequestBody IdentifyTraceDTO identifyTraceDTO) {
+        return userService.dailyCheckToDo(identifyTraceDTO);
+    }
 
 }

@@ -1,6 +1,7 @@
 package net.smartplan.fitness.service;
 
 import net.smartplan.fitness.dto.AddressDTO;
+import net.smartplan.fitness.dto.IdentifyTraceDTO;
 import net.smartplan.fitness.dto.UpdateUserStatusDTO;
 import net.smartplan.fitness.dto.UserDTO;
 
@@ -28,4 +29,6 @@ public interface UserService {
     void recalculate(UserDTO userDTO);
 
     List<UserDTO> getAll();
+
+    IdentifyTraceDTO dailyCheckToDo(IdentifyTraceDTO identifyTraceDTO);
 }
