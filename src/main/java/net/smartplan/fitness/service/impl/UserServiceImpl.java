@@ -74,9 +74,14 @@ public class UserServiceImpl implements UserService {
 
             Calendar calendar = Calendar.getInstance();
 
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+            SimpleDateFormat sdf1 = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+
             calendar.add(Calendar.MONTH, (int) Math.round(userDTO.getGoalTime()));
 
-            userDTO.setExpiredGoalDate(calendar.getTime());
+            String format = sdf1.format(calendar.getTime());
+
+            userDTO.setExpiredGoalDate(sdf1.parse(format));
 
             User user = userRepository.save(modelMapperUtil.convertToEntity(userDTO));
             UserAddress address = modelMapperUtil.convertToEntity(userDTO.getAddress());
@@ -97,14 +102,16 @@ public class UserServiceImpl implements UserService {
 
             IdentifyTraceDTO identifyTraceDTO = new IdentifyTraceDTO();
             identifyTraceDTO.setEmail(userDTO.getEmail());
-            identifyTraceDTO.setGoalExpiredDate(calendar.getTime().toString());
+            identifyTraceDTO.setDailyStatus(true);
+            identifyTraceDTO.setGoalExpiredDate(sdf1.parse(format));
 
-
-            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
             Date firstDate = sdf.parse(new Date().toString());
             Date secondDate = sdf.parse(calendar.getTime().toString());
 
-            long diff = Math.abs(secondDate.getTime() - firstDate.getTime());
+            String date1 = sdf1.format(firstDate);
+            String date2 = sdf1.format(secondDate);
+
+            long diff = Math.abs(new Date(date2).getTime() - new Date(date1).getTime());
 
             identifyTraceDTO.setGoalDays((double) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
 
@@ -211,11 +218,6 @@ public class UserServiceImpl implements UserService {
 
             List<IdentifyTrace> activeTraces = identifyTraceRepository.findAllByEmailAndStatus(user.getEmail(), ACTIVE);
 
-            Calendar calendar = Calendar.getInstance();
-
-            calendar.add(Calendar.MONTH, (int) Math.round(userDTO.getGoalTime()));
-
-
             if (!activeTraces.isEmpty()) {
                 for (IdentifyTrace trace : activeTraces) {
 
@@ -232,16 +234,27 @@ public class UserServiceImpl implements UserService {
 
             try {
 
-                SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
-                Date firstDate = sdf.parse(new Date().toString());
-                Date secondDate = sdf.parse(calendar.getTime().toString());
+                Calendar calendar = Calendar.getInstance();
 
-                long diff = Math.abs(secondDate.getTime() - firstDate.getTime());
+                SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+                SimpleDateFormat sdf1 = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+
+                calendar.add(Calendar.MONTH, (int) Math.round(userDTO.getGoalTime()));
+
+                String format = sdf1.format(calendar.getTime());
+
+                userDTO.setExpiredGoalDate(sdf1.parse(format));
+
+                String date1 = sdf1.format(sdf.parse(new Date().toString()));
+                String date2 = sdf1.format(sdf.parse(calendar.getTime().toString()));
+
+                long diff = Math.abs(new Date(date2).getTime() - new Date(date1).getTime());
 
                 IdentifyTraceDTO identifyTraceDTO = new IdentifyTraceDTO();
 
                 identifyTraceDTO.setEmail(user.getEmail());
-                identifyTraceDTO.setGoalExpiredDate(calendar.getTime().toString());
+                identifyTraceDTO.setDailyStatus(true);
+                identifyTraceDTO.setGoalExpiredDate(sdf1.parse(format));
                 identifyTraceDTO.setGoalDays((double) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
 
                 identifyTraceRepository.save(modelMapperUtil.convertToEntity(identifyTraceDTO));
@@ -299,29 +312,70 @@ public class UserServiceImpl implements UserService {
             IdentifyTraceDTO dto = new IdentifyTraceDTO();
 
             for (IdentifyTrace trace : identifyTrace) {
-
                 double tempDays = trace.getGoalDays() - 1;
+                SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
 
-                if (tempDays > 0) {
-                    dto.setStatus(ACTIVE);
-                    dto.setGoalDays(trace.getGoalDays() - 1);
+                if (fmt.format(new Date()).equals(fmt.format((trace.getUpdated())))) {
+                    dto.setDailyStatus(false);
+
+                    if (tempDays > 0) {
+                        dto.setStatus(ACTIVE);
+                        dto.setGoalDays(trace.getGoalDays() - 1);
+                    } else {
+                        dto.setStatus(EXPIRED);
+                        dto.setGoalDays((double) 0);
+                    }
+                    dto.setUpdated(new Date());
+
                 } else {
-                    dto.setStatus(EXPIRED);
-                    dto.setGoalDays((double) 0);
+                    dto.setGoalDays(trace.getGoalDays());
+                    dto.setUpdated(trace.getUpdated());
+                    dto.setDailyStatus(true);
                 }
 
                 dto.setEmail(trace.getEmail());
-                dto.setDailyStatus(false);
                 dto.setCreated(trace.getCreated());
                 dto.setGoalExpiredDate(trace.getGoalExpiredDate());
                 dto.setId(trace.getId());
-                dto.setUpdated(new Date());
 
                 identifyTraceRepository.save(modelMapperUtil.convertToEntity(dto));
+
             }
 
             return dto;
         }
+        return new IdentifyTraceDTO();
+    }
+
+    @Override
+    public IdentifyTraceDTO checkDailyStatus(String email) {
+        List<IdentifyTrace> identifyTrace = identifyTraceRepository.findAllByEmailAndStatus(email, ACTIVE);
+
+        if (!identifyTrace.isEmpty()) {
+            IdentifyTraceDTO dto = new IdentifyTraceDTO();
+
+            for (IdentifyTrace trace : identifyTrace) {
+
+                try {
+                    dto.setEmail(trace.getEmail());
+                    dto.setCreated(trace.getCreated());
+                    dto.setGoalExpiredDate(trace.getGoalExpiredDate());
+                    dto.setId(trace.getId());
+                    dto.setDailyStatus(trace.getDailyStatus());
+                    dto.setStatus(ACTIVE);
+                    dto.setGoalDays(trace.getGoalDays());
+                    dto.setUpdated(new Date());
+
+                    identifyTraceRepository.save(modelMapperUtil.convertToEntity(dto));
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+
+
+            }
+            return dto;
+        }
+
         return new IdentifyTraceDTO();
     }
 

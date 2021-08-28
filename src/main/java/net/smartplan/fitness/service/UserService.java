@@ -31,4 +31,6 @@ public interface UserService {
     List<UserDTO> getAll();
 
     IdentifyTraceDTO dailyCheckToDo(IdentifyTraceDTO identifyTraceDTO);
+
+    IdentifyTraceDTO checkDailyStatus(String email);
 }

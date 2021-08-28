@@ -75,4 +75,8 @@ public class UserController {
         return userService.dailyCheckToDo(identifyTraceDTO);
     }
 
+    @GetMapping("/checkDailyStatus/{email}")
+    public IdentifyTraceDTO checkDailyCheckToDo(@PathVariable String email) {
+        return userService.checkDailyStatus(email);
+    }
 }

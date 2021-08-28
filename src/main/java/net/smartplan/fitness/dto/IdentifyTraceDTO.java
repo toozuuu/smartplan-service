@@ -10,9 +10,9 @@ public class IdentifyTraceDTO {
     private Integer id;
     private String email;
     private Double goalDays;
-    private String goalExpiredDate;
+    private Date goalExpiredDate;
     private String status = "ACTIVE";
-    private boolean dailyStatus = true;
+    private boolean dailyStatus = false;
     private Date created;
     private Date updated;
 

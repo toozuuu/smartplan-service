@@ -32,7 +32,7 @@ public class IdentifyTrace {
     private Double goalDays;
 
     @Column(name = "goalExpiredDate")
-    private String goalExpiredDate;
+    private Date goalExpiredDate;
 
     @Column(name = "status")
     private String status;
