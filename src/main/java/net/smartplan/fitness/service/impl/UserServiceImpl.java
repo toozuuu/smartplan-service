@@ -313,30 +313,22 @@ public class UserServiceImpl implements UserService {
 
             for (IdentifyTrace trace : identifyTrace) {
                 double tempDays = trace.getGoalDays() - 1;
-                SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
 
-                if (fmt.format(new Date()).equals(fmt.format((trace.getUpdated())))) {
-                    dto.setDailyStatus(false);
-
-                    if (tempDays > 0) {
-                        dto.setStatus(ACTIVE);
-                        dto.setGoalDays(trace.getGoalDays() - 1);
-                    } else {
-                        dto.setStatus(EXPIRED);
-                        dto.setGoalDays((double) 0);
-                    }
-                    dto.setUpdated(new Date());
-
+                if (tempDays > 0) {
+                    dto.setStatus(ACTIVE);
+                    dto.setGoalDays(trace.getGoalDays() - 1);
                 } else {
-                    dto.setGoalDays(trace.getGoalDays());
-                    dto.setUpdated(trace.getUpdated());
-                    dto.setDailyStatus(true);
+                    dto.setStatus(EXPIRED);
+                    dto.setGoalDays((double) 0);
                 }
 
+                dto.setId(trace.getId());
+                dto.setDailyStatus(false);
+                dto.setClickedToDo(true);
+                dto.setUpdated(new Date());
                 dto.setEmail(trace.getEmail());
                 dto.setCreated(trace.getCreated());
                 dto.setGoalExpiredDate(trace.getGoalExpiredDate());
-                dto.setId(trace.getId());
 
                 identifyTraceRepository.save(modelMapperUtil.convertToEntity(dto));
 
@@ -355,22 +347,17 @@ public class UserServiceImpl implements UserService {
             IdentifyTraceDTO dto = new IdentifyTraceDTO();
 
             for (IdentifyTrace trace : identifyTrace) {
+                SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
 
-                try {
-                    dto.setEmail(trace.getEmail());
-                    dto.setCreated(trace.getCreated());
-                    dto.setGoalExpiredDate(trace.getGoalExpiredDate());
-                    dto.setId(trace.getId());
-                    dto.setDailyStatus(trace.getDailyStatus());
-                    dto.setStatus(ACTIVE);
-                    dto.setGoalDays(trace.getGoalDays());
-                    dto.setUpdated(new Date());
-
-                    identifyTraceRepository.save(modelMapperUtil.convertToEntity(dto));
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-
+                dto.setEmail(trace.getEmail());
+                dto.setCreated(trace.getCreated());
+                dto.setGoalExpiredDate(trace.getGoalExpiredDate());
+                dto.setId(trace.getId());
+                dto.setClickedToDo(trace.getClickedToDo());
+                dto.setDailyStatus(fmt.format(new Date()).equals(fmt.format((trace.getUpdated()))));
+                dto.setStatus(trace.getStatus());
+                dto.setGoalDays(trace.getGoalDays());
+                dto.setUpdated(trace.getUpdated());
 
             }
             return dto;

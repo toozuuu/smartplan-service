@@ -13,6 +13,7 @@ public class IdentifyTraceDTO {
     private Date goalExpiredDate;
     private String status = "ACTIVE";
     private boolean dailyStatus = false;
+    private boolean clickedToDo = false;
     private Date created;
     private Date updated;
 

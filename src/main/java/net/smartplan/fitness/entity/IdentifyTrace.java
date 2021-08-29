@@ -37,6 +37,9 @@ public class IdentifyTrace {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "clickedToDo")
+    private Boolean clickedToDo;
+
     @Column(name = "dailyStatus")
     private Boolean dailyStatus;
 
