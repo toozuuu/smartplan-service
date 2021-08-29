@@ -18,6 +18,7 @@ public class UserDTO {
     private String password;
     private Double age;
     private Double weight;
+    private String userRole;
     private String goalType;
     private Double goalTime;
     private Double height;

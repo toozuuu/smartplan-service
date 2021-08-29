@@ -97,6 +97,7 @@ public class UserServiceImpl implements UserService {
                 food.setUserId(user);
                 macronutrientFoodRepository.save(food);
             });
+            user.setUserRole("USER");
             UserDTO dto = modelMapperUtil.convertToDTO(user);
             dto.setAddress(modelMapperUtil.convertToDTO(address));
 
