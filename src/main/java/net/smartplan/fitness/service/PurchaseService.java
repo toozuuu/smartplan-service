@@ -1,7 +1,6 @@
 package net.smartplan.fitness.service;
 
 import net.smartplan.fitness.dto.PurchaseDTO;
-import net.smartplan.fitness.dto.PurchaseDetailsDTO;
 import net.smartplan.fitness.dto.UpdatedPurchaseDetailsDTO;
 
 import java.util.List;
@@ -20,5 +19,5 @@ public interface PurchaseService {
 
     List<PurchaseDTO> fetchAllOrders();
 
-    PurchaseDetailsDTO updateOrderStatus(UpdatedPurchaseDetailsDTO updatedPurchaseDetailsDTO);
+    void updateOrderStatus(UpdatedPurchaseDetailsDTO updatedPurchaseDetailsDTO);
 }

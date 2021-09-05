@@ -86,7 +86,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public PurchaseDetailsDTO updateOrderStatus(UpdatedPurchaseDetailsDTO updatedPurchaseDetailsDTO) {
+    public void updateOrderStatus(UpdatedPurchaseDetailsDTO updatedPurchaseDetailsDTO) {
         Optional<PurchaseDetails> purchaseDetails = detailsRepository.findById(updatedPurchaseDetailsDTO.getId());
 
         if (purchaseDetails.isPresent()) {
@@ -94,9 +94,10 @@ public class PurchaseServiceImpl implements PurchaseService {
             details.setId(details.getId());
             details.setStatus(updatedPurchaseDetailsDTO.getStatus());
             detailsRepository.save(details);
-            return mapperUtil.convertToDTO(details);
+            mapperUtil.convertToDTO(details);
+            return;
         }
-        return new PurchaseDetailsDTO();
+        new PurchaseDetailsDTO();
     }
 
     private List<PurchaseDTO> getPurchaseDTOS(List<PurchaseDTO> list, Iterable<Purchase> all) {
