@@ -15,6 +15,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
 import javax.transaction.Transactional;
 import java.security.spec.KeySpec;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -112,7 +113,11 @@ public class UserServiceImpl implements UserService {
             String date1 = sdf1.format(firstDate);
             String date2 = sdf1.format(secondDate);
 
-            long diff = Math.abs(new Date(date2).getTime() - new Date(date1).getTime());
+            DateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+            Date parse1 = formatter.parse(date1);
+            Date parse2 = formatter.parse(date2);
+
+            long diff = Math.abs(parse2.getTime() - parse1.getTime());
 
             identifyTraceDTO.setGoalDays((double) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
 
@@ -249,7 +254,11 @@ public class UserServiceImpl implements UserService {
                 String date1 = sdf1.format(sdf.parse(new Date().toString()));
                 String date2 = sdf1.format(sdf.parse(calendar.getTime().toString()));
 
-                long diff = Math.abs(new Date(date2).getTime() - new Date(date1).getTime());
+                DateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+                Date parse1 = formatter.parse(date1);
+                Date parse2 = formatter.parse(date2);
+
+                long diff = Math.abs(parse2.getTime() - parse1.getTime());
 
                 IdentifyTraceDTO identifyTraceDTO = new IdentifyTraceDTO();
 
