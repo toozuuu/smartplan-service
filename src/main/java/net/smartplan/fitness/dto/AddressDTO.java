@@ -6,5 +6,5 @@ import lombok.Data;
 public class AddressDTO {
 
     private Integer id;
-    private String adrdess;
+    private String address;
 }

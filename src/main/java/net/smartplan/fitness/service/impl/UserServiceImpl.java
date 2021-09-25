@@ -175,7 +175,7 @@ public class UserServiceImpl implements UserService {
         Optional<UserAddress> optional = addressRepository.findById(addressDTO.getId());
         if (optional.isPresent()) {
             UserAddress userAddress = optional.get();
-            userAddress.setAdrdess(addressDTO.getAdrdess());
+            userAddress.setAdrdess(addressDTO.getAddress());
             return modelMapperUtil.convertToDTO(addressRepository.save(userAddress));
         } else {
             return new AddressDTO();

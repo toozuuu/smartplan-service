@@ -59,6 +59,7 @@ public class UserController {
         userService.updateUser(userDTO);
         return new ResponseEntity<>(new CommonResponse(true, "Success"), HttpStatus.OK);
     }
+
     @PostMapping("/updateV1")
     public ResponseEntity<CommonResponse> recalculate(@RequestBody UserDTO userDTO) {
         userService.recalculate(userDTO);
