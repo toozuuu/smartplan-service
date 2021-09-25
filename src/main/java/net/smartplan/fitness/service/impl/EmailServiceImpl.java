@@ -43,8 +43,8 @@ public class EmailServiceImpl implements EmailService {
             String content = setTemplateContent(list,Double.toString(total), address);
             messageHelper.setFrom(emailFrom);
             messageHelper.setTo(recipient);
-            messageHelper.setCc("kumarajith.illukkumbura@gmail.com");
-            messageHelper.setSubject("K-Plan Product Purchase");
+            messageHelper.setCc("sachindilshan040@gmail.com");
+            messageHelper.setSubject("Smart-Plan Product Purchase");
             messageHelper.setText(content,true);
         };
         try {

@@ -164,7 +164,7 @@ public class ChatServiceImpl implements ChatService {
         ChatMessagesDTO messagesDTO;
         AdminChatRoomDTO dto;
         List<ChatRoom> chatRoomList = chatRoomRepository.findAllBySenderOrReceiverOrderByUpdatedDesc(sender, sender);
-        int newMessageCount = 0;
+        int newMessageCount;
 
         if (chatRoomList != null) {
             ChatMessages chatMessages = new ChatMessages();

@@ -35,8 +35,8 @@ public class UserAddress implements Serializable {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "adrdess")
-    private String adrdess;
+    @Column(name = "address")
+    private String address;
 
     @Column(name = "created")
     @Temporal(TemporalType.TIMESTAMP)
