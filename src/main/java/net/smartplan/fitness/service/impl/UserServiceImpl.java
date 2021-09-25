@@ -180,7 +180,7 @@ public class UserServiceImpl implements UserService {
         Optional<UserAddress> optional = addressRepository.findById(addressDTO.getId());
         if (optional.isPresent()) {
             UserAddress userAddress = optional.get();
-            userAddress.setAdrdess(addressDTO.getAddress());
+            userAddress.setAddress(addressDTO.getAddress());
             return modelMapperUtil.convertToDTO(addressRepository.save(userAddress));
         } else {
             return new AddressDTO();
@@ -300,7 +300,15 @@ public class UserServiceImpl implements UserService {
         List<User> all = userRepository.findAll();
         List<UserDTO> results = new ArrayList<>();
         all.forEach(user -> {
-            UserDTO dto = modelMapperUtil.convertToDTO(user);
+            UserDTO dto = new UserDTO();
+            dto.setExpiredGoalDate(user.getExpiredGoalDate());
+            dto.setName(user.getName());
+            dto.setGender(user.getGender());
+            dto.setConsulter(user.getConsulter());
+            dto.setEmail(user.getEmail());
+            dto.setAge(user.getAge());
+            dto.setStatus(user.getStatus());
+
             List<CaloriePlanDTO> caloriePlans = user.getCaloriePlanCollection().stream().map(modelMapperUtil::convertToDTO).
                     collect(Collectors.toList());
             List<MacronutrientFoodDTO> macronutrientFoodDTOS = user.getMacronutrientFoodCollection().stream().

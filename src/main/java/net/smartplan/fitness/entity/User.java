@@ -88,8 +88,8 @@ public class User implements Serializable {
     @Column(name = "expiredGoalDate")
     private Date expiredGoalDate;
 
-    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     private Date created;
 
     @Temporal(TemporalType.TIMESTAMP)
