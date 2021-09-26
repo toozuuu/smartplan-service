@@ -152,7 +152,17 @@ public class UserServiceImpl implements UserService {
                             collect(Collectors.toList());
                     List<MacronutrientFoodDTO> macronutrientFoodDTOS = user.getMacronutrientFoodCollection().stream().
                             map(modelMapperUtil::convertToDTO).collect(Collectors.toList());
-                    UserDTO dto = modelMapperUtil.convertToDTO(user);
+
+                    UserDTO dto = new UserDTO();
+                    dto.setExpiredGoalDate(user.getExpiredGoalDate());
+                    dto.setName(user.getName());
+                    dto.setId(user.getId());
+                    dto.setGender(user.getGender());
+                    dto.setConsulter(user.getConsulter());
+                    dto.setEmail(user.getEmail());
+                    dto.setAge(user.getAge());
+                    dto.setStatus(user.getStatus());
+
                     dto.setCaloriePlanList(caloriePlans);
                     dto.setNumOfDays((numOfDays / (1000 * 60 * 60 * 24)) % 365);
                     dto.setSuccess(true);
@@ -220,7 +230,6 @@ public class UserServiceImpl implements UserService {
                 caloriePlanRepository.deleteAll(user.getCaloriePlanCollection());
                 updateCaloriePlan(userDTO.getCaloriePlanList(), user);
             }
-            modelMapperUtil.convertToDTO(user);
 
             List<IdentifyTrace> activeTraces = identifyTraceRepository.findAllByEmailAndStatus(user.getEmail(), ACTIVE);
 
@@ -308,6 +317,7 @@ public class UserServiceImpl implements UserService {
             dto.setEmail(user.getEmail());
             dto.setAge(user.getAge());
             dto.setStatus(user.getStatus());
+            dto.setId(user.getId());
 
             List<CaloriePlanDTO> caloriePlans = user.getCaloriePlanCollection().stream().map(modelMapperUtil::convertToDTO).
                     collect(Collectors.toList());
