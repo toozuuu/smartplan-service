@@ -161,6 +161,16 @@ public class UserServiceImpl implements UserService {
                     dto.setConsulter(user.getConsulter());
                     dto.setEmail(user.getEmail());
                     dto.setAge(user.getAge());
+                    dto.setDailyReq(user.getDailyReq());
+                    dto.setDailyReqNon(user.getDailyReqNon());
+                    dto.setConsulter(user.getConsulter());
+                    dto.setActivityLevel(user.getActivityLevel());
+                    dto.setCreated(user.getCreated());
+                    dto.setHeight(user.getHeight());
+                    dto.setWeight(user.getWeight());
+                    dto.setUserRole(user.getUserRole());
+                    dto.setGoalType(user.getGoalType());
+                    dto.setEstimatedBmr(user.getEstimatedBmr());
                     dto.setStatus(user.getStatus());
 
                     dto.setCaloriePlanList(caloriePlans);
