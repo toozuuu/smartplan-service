@@ -26,8 +26,6 @@ public interface UserService {
 
     void updateUser(UserDTO userDTO);
 
-    void recalculate(UserDTO userDTO);
-
     List<UserDTO> getAll();
 
     IdentifyTraceDTO dailyCheckToDo(IdentifyTraceDTO identifyTraceDTO);

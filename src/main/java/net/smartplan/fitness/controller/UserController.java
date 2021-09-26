@@ -60,12 +60,6 @@ public class UserController {
         return new ResponseEntity<>(new CommonResponse(true, "Success"), HttpStatus.OK);
     }
 
-    @PostMapping("/updateV1")
-    public ResponseEntity<CommonResponse> recalculate(@RequestBody UserDTO userDTO) {
-        userService.recalculate(userDTO);
-        return new ResponseEntity<>(new CommonResponse(true, "Success"), HttpStatus.OK);
-    }
-
     @GetMapping("/getAll")
     public List<UserDTO> getAll() {
         return userService.getAll();

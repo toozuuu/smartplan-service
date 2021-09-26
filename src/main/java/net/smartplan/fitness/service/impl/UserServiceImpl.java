@@ -286,24 +286,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void recalculate(UserDTO userDTO) {
-        Optional<User> optional = userRepository.findById(userDTO.getId());
-        if (optional.isPresent()) {
-
-            User user = optional.get();
-            user.setAge(userDTO.getAge());
-            user.setWeight(userDTO.getWeight());
-            updateDetails(userDTO, user);
-
-            if ((!userDTO.getCaloriePlanList().isEmpty())) {
-                caloriePlanRepository.deleteAll(user.getCaloriePlanCollection());
-                updateCaloriePlan(userDTO.getCaloriePlanList(), user);
-            }
-            modelMapperUtil.convertToDTO(user);
-        }
-    }
-
-    @Override
     public List<UserDTO> getAll() {
 
         List<User> all = userRepository.findAll();
