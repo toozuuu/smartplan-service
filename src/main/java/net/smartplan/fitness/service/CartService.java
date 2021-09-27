@@ -21,5 +21,4 @@ public interface CartService {
 
     boolean delete(int id);
 
-    void deleteMealAndUserName(int mealId, String userName);
 }

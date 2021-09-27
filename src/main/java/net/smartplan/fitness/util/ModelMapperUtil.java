@@ -87,6 +87,15 @@ public class ModelMapperUtil {
         return modelMapper.map(mealIngredientsDTO, MealIngredients.class);
     }
 
+    public UnitType convertToEntity(UnitTypeDTO unitTypeDTO) {
+        return modelMapper.map(unitTypeDTO, UnitType.class);
+    }
+
+    public UnitTypeDTO convertToDTO(UnitType unitType) {
+        return modelMapper.map(unitType, UnitTypeDTO.class);
+    }
+
+
     public Cart convertToEntity(CartDTO cartDTO) {
         return modelMapper.map(cartDTO, Cart.class);
     }

@@ -76,12 +76,4 @@ public class CartServiceImpl implements CartService {
         }
     }
 
-    @Override
-    public void deleteMealAndUserName(int mealId, String userName) {
-
-        Cart cart = cartRepository.findByEmailAndMealId_Id(userName, mealId);
-        if (cart != null) {
-            cartRepository.delete(cart);
-        }
-    }
 }
