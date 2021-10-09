@@ -5,6 +5,7 @@ import net.smartplan.fitness.dto.IdentifyTraceDTO;
 import net.smartplan.fitness.dto.UpdateUserStatusDTO;
 import net.smartplan.fitness.dto.UserDTO;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 
@@ -31,4 +32,7 @@ public interface UserService {
     IdentifyTraceDTO dailyCheckToDo(IdentifyTraceDTO identifyTraceDTO);
 
     IdentifyTraceDTO checkDailyStatus(String email);
+
+    ByteArrayInputStream getUserReport();
+
 }

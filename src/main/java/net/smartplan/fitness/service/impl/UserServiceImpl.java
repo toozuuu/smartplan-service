@@ -6,6 +6,8 @@ import net.smartplan.fitness.entity.*;
 import net.smartplan.fitness.repository.*;
 import net.smartplan.fitness.service.UserService;
 import net.smartplan.fitness.util.ModelMapperUtil;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
 import javax.transaction.Transactional;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.spec.KeySpec;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -308,7 +313,14 @@ public class UserServiceImpl implements UserService {
             dto.setConsulter(user.getConsulter());
             dto.setEmail(user.getEmail());
             dto.setAge(user.getAge());
+            dto.setHeight(user.getHeight());
+            dto.setWeight(user.getWeight());
             dto.setStatus(user.getStatus());
+            dto.setFatFreeMass(user.getFatFreeMass());
+            dto.setEstimatedBmr(user.getEstimatedBmr());
+            dto.setActivityLevel(user.getActivityLevel());
+            dto.setBodyFat(user.getBodyFat());
+            dto.setCreated(user.getCreated());
             dto.setId(user.getId());
 
             List<CaloriePlanDTO> caloriePlans = user.getCaloriePlanCollection().stream().map(modelMapperUtil::convertToDTO).
@@ -386,6 +398,7 @@ public class UserServiceImpl implements UserService {
         return new IdentifyTraceDTO();
     }
 
+
     private void updateDetails(UserDTO userDTO, User user) {
         user.setHeight(userDTO.getHeight());
         user.setBodyFat(userDTO.getBodyFat());
@@ -442,6 +455,64 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         }
         return decryptedText;
+    }
+
+    @Override
+    public ByteArrayInputStream getUserReport() {
+        String[] columns = {"Id", "Name", "Gender", "Email", "Age", "Height", "Weight", "Consulter", "Fat Free Mass", "Activity Level", "Body Fat", "Estimated Bmr"
+                , "Address", "Created", "Status"};
+
+        Workbook workbook = new XSSFWorkbook();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        CreationHelper createHelper = workbook.getCreationHelper();
+        Sheet sheet = workbook.createSheet("User");
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerFont.setColor(IndexedColors.BLUE.getIndex());
+
+        CellStyle headerCellStyle = workbook.createCellStyle();
+        headerCellStyle.setFont(headerFont);
+        // Row for Header
+        Row headerRow = sheet.createRow(0);
+        // Header
+        for (int col = 0; col < columns.length; col++) {
+            Cell cell = headerRow.createCell(col);
+            cell.setCellValue(columns[col]);
+            cell.setCellStyle(headerCellStyle);
+        }
+        // CellStyle for Age
+        CellStyle ageCellStyle = workbook.createCellStyle();
+        ageCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("#"));
+        List<UserDTO> list = getAll();
+        int rowIdx = 1;
+        for (UserDTO dto : list) {
+            Row row = sheet.createRow(rowIdx++);
+
+            row.createCell(0).setCellValue(dto.getId());
+            row.createCell(1).setCellValue(dto.getName());
+            row.createCell(2).setCellValue(dto.getGender());
+            row.createCell(3).setCellValue(dto.getEmail());
+            row.createCell(4).setCellValue(dto.getAge());
+            row.createCell(5).setCellValue(dto.getHeight());
+            row.createCell(6).setCellValue(dto.getWeight());
+            row.createCell(7).setCellValue(dto.getConsulter());
+            row.createCell(8).setCellValue(dto.getFatFreeMass());
+            row.createCell(9).setCellValue(dto.getActivityLevel());
+            row.createCell(10).setCellValue(dto.getBodyFat());
+            row.createCell(11).setCellValue(dto.getEstimatedBmr());
+            row.createCell(12).setCellValue(dto.getAddress().getAddress());
+            row.createCell(13).setCellValue(dto.getCreated());
+            row.createCell(14).setCellValue(dto.getStatus());
+
+        }
+
+        try {
+            workbook.write(out);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+        return new ByteArrayInputStream(out.toByteArray());
     }
 
 }

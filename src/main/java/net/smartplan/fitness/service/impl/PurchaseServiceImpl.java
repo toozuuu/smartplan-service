@@ -158,7 +158,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         CreationHelper createHelper = workbook.getCreationHelper();
-        Sheet sheet = workbook.createSheet("Meal");
+        Sheet sheet = workbook.createSheet("Order");
         Font headerFont = workbook.createFont();
         headerFont.setBold(true);
         headerFont.setColor(IndexedColors.BLUE.getIndex());
