@@ -488,6 +488,7 @@ public class UserServiceImpl implements UserService {
         int rowIdx = 1;
         for (UserDTO dto : list) {
             Row row = sheet.createRow(rowIdx++);
+            DateFormat formatter = new SimpleDateFormat("dd-M-yyyy");
 
             row.createCell(0).setCellValue(dto.getId());
             row.createCell(1).setCellValue(dto.getName());
@@ -502,7 +503,7 @@ public class UserServiceImpl implements UserService {
             row.createCell(10).setCellValue(dto.getBodyFat());
             row.createCell(11).setCellValue(dto.getEstimatedBmr());
             row.createCell(12).setCellValue(dto.getAddress().getAddress());
-            row.createCell(13).setCellValue(dto.getCreated());
+            row.createCell(13).setCellValue(formatter.format(dto.getCreated()));
             row.createCell(14).setCellValue(dto.getStatus());
 
         }
