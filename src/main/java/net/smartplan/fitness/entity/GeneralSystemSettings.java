@@ -1,11 +1,13 @@
 package net.smartplan.fitness.entity;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author H.D. Sachin Dilshan
@@ -14,7 +16,10 @@ import java.util.Date;
 @Entity
 @Table(name = "general_system_settings")
 @XmlRootElement
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 public class GeneralSystemSettings {
 
     private static final long serialVersionUID = 1L;
@@ -29,4 +34,16 @@ public class GeneralSystemSettings {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updated;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        GeneralSystemSettings that = (GeneralSystemSettings) o;
+        return Objects.equals(code, that.code);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 }

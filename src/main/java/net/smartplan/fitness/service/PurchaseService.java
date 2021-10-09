@@ -3,6 +3,7 @@ package net.smartplan.fitness.service;
 import net.smartplan.fitness.dto.PurchaseDTO;
 import net.smartplan.fitness.dto.UpdatedPurchaseDetailsDTO;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 
@@ -20,4 +21,7 @@ public interface PurchaseService {
     List<PurchaseDTO> fetchAllOrders();
 
     void updateOrderStatus(UpdatedPurchaseDetailsDTO updatedPurchaseDetailsDTO);
+
+    ByteArrayInputStream getOrdersReport();
+
 }

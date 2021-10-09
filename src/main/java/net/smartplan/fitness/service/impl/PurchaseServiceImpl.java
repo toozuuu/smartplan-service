@@ -1,10 +1,7 @@
 package net.smartplan.fitness.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import net.smartplan.fitness.dto.EmailBodyDTO;
-import net.smartplan.fitness.dto.PurchaseDTO;
-import net.smartplan.fitness.dto.PurchaseDetailsDTO;
-import net.smartplan.fitness.dto.UpdatedPurchaseDetailsDTO;
+import net.smartplan.fitness.dto.*;
 import net.smartplan.fitness.entity.Meal;
 import net.smartplan.fitness.entity.Purchase;
 import net.smartplan.fitness.entity.PurchaseDetails;
@@ -14,13 +11,17 @@ import net.smartplan.fitness.repository.PurchaseRepository;
 import net.smartplan.fitness.service.EmailService;
 import net.smartplan.fitness.service.PurchaseService;
 import net.smartplan.fitness.util.ModelMapperUtil;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
+
 
 @Service
 @Slf4j
@@ -46,6 +47,14 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public PurchaseDTO save(PurchaseDTO purchaseDTO) {
+
+        //for generate purchase id
+        String uuid = UUID.randomUUID().toString();
+        uuid = uuid.toUpperCase(Locale.ENGLISH);
+        uuid = uuid.replace("-", "");
+        String uuid10digits = uuid.substring(uuid.length() - 10);
+
+        purchaseDTO.setPurchaseId(uuid10digits);
 
         Purchase purchase = purchaseRepository.save(mapperUtil.convertToEntity(purchaseDTO));
         List<EmailBodyDTO> bodyDTOS = new ArrayList<>();
@@ -119,4 +128,77 @@ public class PurchaseServiceImpl implements PurchaseService {
         dto.setAmount("$. ".concat(Double.toString(amount)));
         return dto;
     }
+
+    public List<PurchaseDetailsDTO> fetchAllPurchaseDetails() {
+        List<PurchaseDetailsDTO> list = new ArrayList<>();
+        Iterable<PurchaseDetails> all = detailsRepository.findAll();
+        all.forEach(details -> {
+
+            PurchaseDetailsDTO purchaseDetailsDTO = new PurchaseDetailsDTO();
+
+            purchaseDetailsDTO.setPurchaseDetailsId(details.getPurchaseId().getPurchaseId());
+            purchaseDetailsDTO.setMealName(details.getMealId().getMealName());
+            purchaseDetailsDTO.setComment(details.getComment());
+            purchaseDetailsDTO.setQuantity(details.getQuantity());
+            purchaseDetailsDTO.setPrice(details.getPrice());
+            purchaseDetailsDTO.setOrderDate(details.getOrderDate());
+            purchaseDetailsDTO.setOrderTime(details.getOrderTime());
+            purchaseDetailsDTO.setShippingAddress(details.getShippingAddress());
+            purchaseDetailsDTO.setStatus(details.getStatus());
+            list.add(purchaseDetailsDTO);
+        });
+        return list;
+    }
+
+    @Override
+    public ByteArrayInputStream getOrdersReport() {
+        String[] columns = {"Order Id", "Meal Name", "Quantity", "Price($)", "Shipping Address", "Comment", "Order Date", "Status"};
+
+        Workbook workbook = new XSSFWorkbook();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        CreationHelper createHelper = workbook.getCreationHelper();
+        Sheet sheet = workbook.createSheet("Meal");
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerFont.setColor(IndexedColors.BLUE.getIndex());
+
+        CellStyle headerCellStyle = workbook.createCellStyle();
+        headerCellStyle.setFont(headerFont);
+        // Row for Header
+        Row headerRow = sheet.createRow(0);
+        // Header
+        for (int col = 0; col < columns.length; col++) {
+            Cell cell = headerRow.createCell(col);
+            cell.setCellValue(columns[col]);
+            cell.setCellStyle(headerCellStyle);
+        }
+        // CellStyle for Age
+        CellStyle ageCellStyle = workbook.createCellStyle();
+        ageCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("#"));
+        List<PurchaseDetailsDTO> list = fetchAllPurchaseDetails();
+        int rowIdx = 1;
+        for (PurchaseDetailsDTO dto : list) {
+            Row row = sheet.createRow(rowIdx++);
+
+            row.createCell(0).setCellValue(dto.getPurchaseDetailsId());
+            row.createCell(1).setCellValue(dto.getMealName());
+            row.createCell(2).setCellValue(dto.getQuantity());
+            row.createCell(3).setCellValue(dto.getPrice());
+            row.createCell(4).setCellValue(dto.getShippingAddress());
+            row.createCell(5).setCellValue(dto.getComment());
+            row.createCell(6).setCellValue(dto.getOrderDate());
+            row.createCell(7).setCellValue(dto.getStatus());
+
+        }
+
+        try {
+            workbook.write(out);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+
 }

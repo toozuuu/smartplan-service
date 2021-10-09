@@ -1,12 +1,14 @@
 package net.smartplan.fitness.entity;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author H.D. Sachin Dilshan
@@ -15,7 +17,10 @@ import java.util.Date;
 @Entity
 @Table(name = "unit_type")
 @XmlRootElement
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 public class UnitType {
 
     private static final long serialVersionUID = 1L;
@@ -36,4 +41,16 @@ public class UnitType {
     @UpdateTimestamp
     private Date updated;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        UnitType unitType = (UnitType) o;
+        return Objects.equals(id, unitType.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 }

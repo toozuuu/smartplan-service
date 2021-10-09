@@ -2,6 +2,8 @@ package net.smartplan.fitness.service;
 
 import net.smartplan.fitness.dto.MealDTO;
 
+import java.io.ByteArrayInputStream;
+import java.text.ParseException;
 import java.util.List;
 
 
@@ -27,5 +29,8 @@ public interface MealService {
     void updateTotal(int id);
 
     boolean deleteIng(int id);
+
+    ByteArrayInputStream getMealReport();
+
 
 }

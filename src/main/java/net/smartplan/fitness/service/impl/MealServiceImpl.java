@@ -14,12 +14,19 @@ import net.smartplan.fitness.repository.UserRepository;
 import net.smartplan.fitness.response.CommonResponse;
 import net.smartplan.fitness.service.MealService;
 import net.smartplan.fitness.util.ModelMapperUtil;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -176,5 +183,55 @@ public class MealServiceImpl implements MealService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public ByteArrayInputStream getMealReport() {
+        String[] columns = {"Meal Id", "Meal Name", "Meal Type", "Price($)", "Status", "Created", "Updated"};
+
+        Workbook workbook = new XSSFWorkbook();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        CreationHelper createHelper = workbook.getCreationHelper();
+        Sheet sheet = workbook.createSheet("Meal");
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerFont.setColor(IndexedColors.BLUE.getIndex());
+
+        CellStyle headerCellStyle = workbook.createCellStyle();
+        headerCellStyle.setFont(headerFont);
+        // Row for Header
+        Row headerRow = sheet.createRow(0);
+        // Header
+        for (int col = 0; col < columns.length; col++) {
+            Cell cell = headerRow.createCell(col);
+            cell.setCellValue(columns[col]);
+            cell.setCellStyle(headerCellStyle);
+        }
+        // CellStyle for Age
+        CellStyle ageCellStyle = workbook.createCellStyle();
+        ageCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("#"));
+        List<MealDTO> list = getAll();
+        int rowIdx = 1;
+        for (MealDTO dto : list) {
+            Row row = sheet.createRow(rowIdx++);
+            DateFormat formatter = new SimpleDateFormat("dd-M-yyyy");
+
+            row.createCell(0).setCellValue(dto.getId());
+            row.createCell(1).setCellValue(dto.getMealName());
+            row.createCell(2).setCellValue(dto.getMealType());
+            row.createCell(3).setCellValue(dto.getPrice());
+            row.createCell(4).setCellValue(dto.getStatus());
+            row.createCell(5).setCellValue(formatter.format(dto.getCreated()));
+            row.createCell(6).setCellValue(formatter.format(dto.getUpdated()));
+
+        }
+
+        try {
+            workbook.write(out);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+        return new ByteArrayInputStream(out.toByteArray());
     }
 }

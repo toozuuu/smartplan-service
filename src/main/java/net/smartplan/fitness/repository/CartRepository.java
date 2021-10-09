@@ -13,5 +13,4 @@ public interface CartRepository extends CrudRepository<Cart,Integer> {
 
     List<Cart> findAllByEmail(String email);
 
-    Cart findByEmailAndMealId_Id(String email, int id);
 }

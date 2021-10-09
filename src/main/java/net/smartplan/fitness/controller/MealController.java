@@ -5,10 +5,14 @@ import net.smartplan.fitness.dto.MealDTO;
 import net.smartplan.fitness.response.CommonResponse;
 import net.smartplan.fitness.service.MealService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -41,7 +45,7 @@ public class MealController {
 
     }
 
-    @GetMapping("/allNew")
+    @GetMapping("/all")
     public List<MealDTO> getAll() {
         return mealService.getAll();
     }
@@ -71,6 +75,19 @@ public class MealController {
     @DeleteMapping("/ing/delete/{id}")
     public boolean deleteIng(@PathVariable int id) {
         return mealService.deleteIng(id);
+    }
+
+
+    @GetMapping("/generateExcel/report")
+    public ResponseEntity<InputStreamResource> excelGenerator() {
+
+        ByteArrayInputStream in = mealService.getMealReport();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=meals report.xlsx");
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .body(new InputStreamResource(in));
     }
 
 }

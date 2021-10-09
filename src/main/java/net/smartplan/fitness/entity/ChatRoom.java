@@ -1,6 +1,7 @@
 package net.smartplan.fitness.entity;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -8,6 +9,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author H.D. Sachin Dilshan
@@ -16,7 +18,10 @@ import java.util.Date;
 @Entity
 @Table(name = "chat_room")
 @XmlRootElement
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 public class ChatRoom implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -38,6 +43,7 @@ public class ChatRoom implements Serializable {
     @Column(name = "username")
     private String username;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "chatRoomId")
+    @ToString.Exclude
     private Collection<ChatMessages> chatMessagesCollection;
 
 
@@ -46,4 +52,16 @@ public class ChatRoom implements Serializable {
         return chatMessagesCollection;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        ChatRoom chatRoom = (ChatRoom) o;
+        return Objects.equals(chatRoomId, chatRoom.chatRoomId);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 }

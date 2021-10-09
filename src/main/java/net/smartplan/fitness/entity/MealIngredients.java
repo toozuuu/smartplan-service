@@ -1,19 +1,13 @@
 
 package net.smartplan.fitness.entity;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
-import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author H.D. Sachin Dilshan
@@ -22,7 +16,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "meal_ingredients")
 @XmlRootElement
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 public class MealIngredients implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,4 +44,16 @@ public class MealIngredients implements Serializable {
     @ManyToOne
     private Meal mealId;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        MealIngredients that = (MealIngredients) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 }

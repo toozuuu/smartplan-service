@@ -13,5 +13,4 @@ public interface PurchaseRepository extends CrudRepository<Purchase, Integer> {
 
     List<Purchase> findAllByEmailOrderByCreatedDesc(String email);
 
-
 }

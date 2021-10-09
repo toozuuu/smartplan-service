@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class PurchaseDTO {
 
-    private Integer purchaseId;
+    private String purchaseId;
     private String email;
     private Date created;
     private Date updated;

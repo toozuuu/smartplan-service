@@ -1,10 +1,12 @@
 package net.smartplan.fitness.entity;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author H.D. Sachin Dilshan
@@ -13,7 +15,10 @@ import java.io.Serializable;
 @Entity
 @Table(name = "file_metadata")
 @XmlRootElement
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 public class FileMetadata implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,4 +32,17 @@ public class FileMetadata implements Serializable {
     @JoinColumn(name = "file_id", referencedColumnName = "file_id", insertable = false, updatable = false)
     @OneToOne(optional = false)
     private FileStorage fileStorage;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        FileMetadata that = (FileMetadata) o;
+        return Objects.equals(fileId, that.fileId);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 }

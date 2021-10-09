@@ -14,5 +14,7 @@ public class PurchaseDetailsDTO {
     private String orderTime;
     private String shippingAddress;
     private MealDTO mealId;
+    private String mealName;
+    private String purchaseDetailsId;
     private String status = "PENDING";
 }

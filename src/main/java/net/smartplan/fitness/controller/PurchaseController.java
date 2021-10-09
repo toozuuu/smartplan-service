@@ -6,10 +6,13 @@ import net.smartplan.fitness.dto.UpdatedPurchaseDetailsDTO;
 import net.smartplan.fitness.response.CommonResponse;
 import net.smartplan.fitness.service.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 /**
@@ -66,5 +69,18 @@ public class PurchaseController {
             log.error(e.toString());
             return new ResponseEntity<>(new CommonResponse(false, e.toString()), HttpStatus.OK);
         }
+    }
+
+
+    @GetMapping("/generateExcel/report")
+    public ResponseEntity<InputStreamResource> excelGenerator() {
+
+        ByteArrayInputStream in = purchaseService.getOrdersReport();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=meals report.xlsx");
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .body(new InputStreamResource(in));
     }
 }

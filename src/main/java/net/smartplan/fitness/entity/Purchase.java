@@ -1,15 +1,17 @@
 
 package net.smartplan.fitness.entity;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Objects;
 
 /**
  * @author H.D. Sachin Dilshan
@@ -18,15 +20,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "purchase")
 @XmlRootElement
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 public class Purchase implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "purchase_id")
-    private Integer purchaseId;
+    private String purchaseId;
     @Column(name = "user_name")
     private String email;
     @Column(name = "created")
@@ -38,7 +42,19 @@ public class Purchase implements Serializable {
     @UpdateTimestamp
     private Date updated;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "purchaseId")
+    @ToString.Exclude
     private Collection<PurchaseDetails> purchaseDetailsCollection;
 
-    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Purchase purchase = (Purchase) o;
+        return Objects.equals(purchaseId, purchase.purchaseId);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 }

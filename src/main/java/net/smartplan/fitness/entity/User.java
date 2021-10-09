@@ -1,7 +1,8 @@
 
 package net.smartplan.fitness.entity;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -10,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author H.D. Sachin Dilshan
@@ -18,7 +20,10 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 @XmlRootElement
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -97,12 +102,27 @@ public class User implements Serializable {
     private Date updated;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    @ToString.Exclude
     private List<MacronutrientFood> macronutrientFoodCollection;
 
     @OneToMany(mappedBy = "userId")
+    @ToString.Exclude
     private List<CaloriePlan> caloriePlanCollection;
 
     @OneToMany(mappedBy = "userId")
+    @ToString.Exclude
     private List<UserAddress> userAddressCollection;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 }
