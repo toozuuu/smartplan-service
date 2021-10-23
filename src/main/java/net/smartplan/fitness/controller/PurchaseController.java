@@ -2,6 +2,7 @@ package net.smartplan.fitness.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import net.smartplan.fitness.dto.PurchaseDTO;
+import net.smartplan.fitness.dto.PurchaseDetailsStatusCountDTO;
 import net.smartplan.fitness.dto.UpdatedPurchaseDetailsDTO;
 import net.smartplan.fitness.response.CommonResponse;
 import net.smartplan.fitness.service.PurchaseService;
@@ -56,6 +57,11 @@ public class PurchaseController {
     @GetMapping("/getOrders")
     public List<PurchaseDTO> getAllOrders() {
         return purchaseService.fetchAllOrders();
+    }
+
+    @GetMapping("/getCount/{username}/{status}")
+    public PurchaseDetailsStatusCountDTO getStatusCount(@PathVariable String username,@PathVariable String status) {
+        return purchaseService.getStatusCount(username,status);
     }
 
 

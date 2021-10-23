@@ -1,6 +1,7 @@
 package net.smartplan.fitness.service;
 
 import net.smartplan.fitness.dto.PurchaseDTO;
+import net.smartplan.fitness.dto.PurchaseDetailsStatusCountDTO;
 import net.smartplan.fitness.dto.UpdatedPurchaseDetailsDTO;
 
 import java.io.ByteArrayInputStream;
@@ -24,4 +25,5 @@ public interface PurchaseService {
 
     ByteArrayInputStream getOrdersReport();
 
+    PurchaseDetailsStatusCountDTO getStatusCount(String username,String status);
 }

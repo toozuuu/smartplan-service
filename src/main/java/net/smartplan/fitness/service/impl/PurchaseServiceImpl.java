@@ -200,5 +200,26 @@ public class PurchaseServiceImpl implements PurchaseService {
         return new ByteArrayInputStream(out.toByteArray());
     }
 
+    @Override
+    public PurchaseDetailsStatusCountDTO getStatusCount(String username, String status) {
+        List<PurchaseDTO> allByUser = getAllByUser(username);
+        List<PurchaseDTO> dto = new ArrayList<>();
+        PurchaseDetailsStatusCountDTO statusCountDTO = new PurchaseDetailsStatusCountDTO();
+
+        if (!allByUser.isEmpty()) {
+            allByUser.forEach(purchaseDTO -> {
+                List<PurchaseDetailsDTO> purchaseDetails = purchaseDTO.getPurchaseDetails();
+                if (!purchaseDetails.isEmpty()) {
+                    purchaseDetails.forEach(purchaseDetailsDTO -> {
+                        if (purchaseDetailsDTO.getStatus().equals(status)) {
+                            dto.add(purchaseDTO);
+                        }
+                    });
+                }
+            });
+        }
+        statusCountDTO.setCount(dto.size());
+        return statusCountDTO;
+    }
 
 }
