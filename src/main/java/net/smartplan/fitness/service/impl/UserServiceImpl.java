@@ -538,8 +538,6 @@ public class UserServiceImpl implements UserService {
         adminDTO.setCreated(new Date());
         AdminDetails adminDetails = adminDetailsRepository.findByEmail(adminDTO.getEmail());
 
-        log.info("UserServiceImpl :: adminLogin :: ADMIN DETAILS :" + adminDetails.toString());
-
         if (decryptPassword(adminDetails.getPassword()).equals(adminDTO.getPassword())) {
             log.info("ADMIN PASSWORD IS CORRECT!!");
             adminDTO.setLogged(true);
