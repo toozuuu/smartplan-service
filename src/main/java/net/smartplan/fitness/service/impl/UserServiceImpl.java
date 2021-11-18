@@ -352,7 +352,10 @@ public class UserServiceImpl implements UserService {
                 String date1 = sdf.format(new Date());
                 String date2 = sdf.format(trace.getUpdated());
 
-                if(!date1.equals(date2)){
+                log.info("UserServiceImpl :: IdentifyTraceDTO :: dailyCheckToDo :: CURRENT DATE" + date1);
+                log.info("UserServiceImpl :: IdentifyTraceDTO :: dailyCheckToDo :: UPDATED DATE" + date2);
+
+                if (!date1.equals(date2)) {
                     double tempDays = trace.getGoalDays() - 1;
 
                     if (tempDays > 0) {
@@ -373,7 +376,7 @@ public class UserServiceImpl implements UserService {
                     dto.setStatus(ACTIVE);
 
                     identifyTraceRepository.save(modelMapperUtil.convertToEntity(dto));
-                }else {
+                } else {
                     dto.setStatus(DISABLED);
                 }
             }

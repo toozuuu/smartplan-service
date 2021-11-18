@@ -1,0 +1,12 @@
+CREATE TABLE `smart_plan`.`admin_details` (
+                                              `email` VARCHAR(255) NOT NULL,
+                                              `password` VARCHAR(255) NULL,
+                                              PRIMARY KEY (`email`));
+
+
+ALTER TABLE `smart_plan`.`admin_details`
+    CHANGE COLUMN `password` `password` VARCHAR(255) NOT NULL ;
+
+
+
+UPDATE `smart_plan`.`admin_details` SET `password` = 'Whg8I8pnQkbDtjyesvjGlw==' WHERE (`email` = 'admin@gmail.com');
