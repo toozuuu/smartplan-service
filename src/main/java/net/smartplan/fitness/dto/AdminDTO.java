@@ -10,7 +10,6 @@ public class AdminDTO {
     private String email;
     private String password;
     private boolean isLogged = false;
-    private boolean isUpdatedAdmin = false;
     private Date created;
     private Date updated;
 }

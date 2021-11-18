@@ -562,7 +562,6 @@ public class UserServiceImpl implements UserService {
         AdminDetails adminDetails = adminDetailsRepository.findByEmail(adminDTO.getEmail());
 
         if (adminDetails.getEmail() != null) {
-            adminDTO.setUpdatedAdmin(true);
             adminDetailsRepository.deleteAll();
             adminDTO.setPassword(encryptPassword(adminDTO.getPassword()));
             adminDetailsRepository.save(modelMapperUtil.convertToEntity(adminDTO));
