@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.spec.KeySpec;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService {
     private static final String UNICODE_FORMAT = "UTF8";
     public static final String DEEDED_ENCRYPTION_SCHEME = "DESede";
     public static final String ACTIVE = "ACTIVE";
+    public static final String DISABLED = "DISABLED";
     public static final String EXPIRED = "EXPIRED";
     private Cipher cipher;
     byte[] arrayBytes;
@@ -331,39 +333,49 @@ public class UserServiceImpl implements UserService {
             dto.setSuccess(true);
             dto.setAddress(modelMapperUtil.convertToDTO(user.getUserAddressCollection().get(0)));
             dto.setMacronutrientFoodList(macronutrientFoodDTOS);
+            dto.setPendingGoalDays(this.checkDailyStatus(user.getEmail()).getGoalDays());
             results.add(dto);
         });
         return results;
     }
 
     @Override
-    public IdentifyTraceDTO dailyCheckToDo(IdentifyTraceDTO identifyTraceDTO) {
+    public IdentifyTraceDTO dailyCheckToDo(IdentifyTraceDTO identifyTraceDTO) throws ParseException {
         List<IdentifyTrace> identifyTrace = identifyTraceRepository.findAllByEmailAndStatus(identifyTraceDTO.getEmail(), ACTIVE);
 
         if (!identifyTrace.isEmpty()) {
+
             IdentifyTraceDTO dto = new IdentifyTraceDTO();
 
             for (IdentifyTrace trace : identifyTrace) {
-                double tempDays = trace.getGoalDays() - 1;
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
+                String date1 = sdf.format(new Date());
+                String date2 = sdf.format(trace.getUpdated());
 
-                if (tempDays > 0) {
+                if(!date1.equals(date2)){
+                    double tempDays = trace.getGoalDays() - 1;
+
+                    if (tempDays > 0) {
+                        dto.setStatus(ACTIVE);
+                        dto.setGoalDays(trace.getGoalDays() - 1);
+                    } else {
+                        dto.setStatus(EXPIRED);
+                        dto.setGoalDays((double) 0);
+                    }
+
+                    dto.setId(trace.getId());
+                    dto.setDailyStatus(false);
+                    dto.setClickedToDo(true);
+                    dto.setUpdated(new Date());
+                    dto.setEmail(trace.getEmail());
+                    dto.setCreated(trace.getCreated());
+                    dto.setGoalExpiredDate(trace.getGoalExpiredDate());
                     dto.setStatus(ACTIVE);
-                    dto.setGoalDays(trace.getGoalDays() - 1);
-                } else {
-                    dto.setStatus(EXPIRED);
-                    dto.setGoalDays((double) 0);
+
+                    identifyTraceRepository.save(modelMapperUtil.convertToEntity(dto));
+                }else {
+                    dto.setStatus(DISABLED);
                 }
-
-                dto.setId(trace.getId());
-                dto.setDailyStatus(false);
-                dto.setClickedToDo(true);
-                dto.setUpdated(new Date());
-                dto.setEmail(trace.getEmail());
-                dto.setCreated(trace.getCreated());
-                dto.setGoalExpiredDate(trace.getGoalExpiredDate());
-
-                identifyTraceRepository.save(modelMapperUtil.convertToEntity(dto));
-
             }
 
             return dto;

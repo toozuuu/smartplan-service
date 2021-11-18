@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -69,7 +70,7 @@ public class UserController {
     }
 
     @PostMapping("/daily/checkToDo")
-    public IdentifyTraceDTO dailyCheckToDo(@RequestBody IdentifyTraceDTO identifyTraceDTO) {
+    public IdentifyTraceDTO dailyCheckToDo(@RequestBody IdentifyTraceDTO identifyTraceDTO) throws ParseException {
         return userService.dailyCheckToDo(identifyTraceDTO);
     }
 

@@ -37,5 +37,6 @@ public class UserDTO {
     private Date created;
     private Date expiredGoalDate;
     private long numOfDays;
+    private double pendingGoalDays;
     private String status = "PENDING";
 }

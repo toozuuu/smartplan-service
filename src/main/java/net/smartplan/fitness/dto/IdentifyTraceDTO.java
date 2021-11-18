@@ -11,7 +11,7 @@ public class IdentifyTraceDTO {
     private String email;
     private Double goalDays;
     private Date goalExpiredDate;
-    private String status = "ACTIVE";
+    private String status = "PENDING";
     private boolean dailyStatus = false;
     private boolean clickedToDo = false;
     private Date created;

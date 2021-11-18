@@ -6,6 +6,7 @@ import net.smartplan.fitness.dto.UpdateUserStatusDTO;
 import net.smartplan.fitness.dto.UserDTO;
 
 import java.io.ByteArrayInputStream;
+import java.text.ParseException;
 import java.util.List;
 
 
@@ -29,7 +30,7 @@ public interface UserService {
 
     List<UserDTO> getAll();
 
-    IdentifyTraceDTO dailyCheckToDo(IdentifyTraceDTO identifyTraceDTO);
+    IdentifyTraceDTO dailyCheckToDo(IdentifyTraceDTO identifyTraceDTO) throws ParseException;
 
     IdentifyTraceDTO checkDailyStatus(String email);
 
