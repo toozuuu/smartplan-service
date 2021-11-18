@@ -1,9 +1,6 @@
 package net.smartplan.fitness.controller;
 
-import net.smartplan.fitness.dto.AddressDTO;
-import net.smartplan.fitness.dto.IdentifyTraceDTO;
-import net.smartplan.fitness.dto.UpdateUserStatusDTO;
-import net.smartplan.fitness.dto.UserDTO;
+import net.smartplan.fitness.dto.*;
 import net.smartplan.fitness.response.CommonResponse;
 import net.smartplan.fitness.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +74,11 @@ public class UserController {
     @GetMapping("/checkDailyStatus/{email}")
     public IdentifyTraceDTO checkDailyCheckToDo(@PathVariable String email) {
         return userService.checkDailyStatus(email);
+    }
+
+    @PostMapping("/admin/login")
+    public AdminDTO adminLogin(@RequestBody AdminDTO adminDTO) {
+        return userService.adminLogin(adminDTO);
     }
 
     @GetMapping("/generateExcel/report")

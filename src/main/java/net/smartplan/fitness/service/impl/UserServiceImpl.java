@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
     private final ModelMapperUtil modelMapperUtil;
     private final AddressRepository addressRepository;
     private final IdentifyTraceRepository identifyTraceRepository;
+    private final AdminDetailsRepository adminDetailsRepository;
 
     private static final String UNICODE_FORMAT = "UTF8";
     public static final String DEEDED_ENCRYPTION_SCHEME = "DESede";
@@ -54,13 +55,14 @@ public class UserServiceImpl implements UserService {
                            CaloriePlanRepository caloriePlanRepository,
                            MacronutrientFoodRepository macronutrientFoodRepository,
                            ModelMapperUtil modelMapperUtil,
-                           AddressRepository addressRepository, IdentifyTraceRepository identifyTraceRepository) {
+                           AddressRepository addressRepository, IdentifyTraceRepository identifyTraceRepository, AdminDetailsRepository adminDetailsRepository) {
         this.userRepository = userRepository;
         this.caloriePlanRepository = caloriePlanRepository;
         this.macronutrientFoodRepository = macronutrientFoodRepository;
         this.modelMapperUtil = modelMapperUtil;
         this.addressRepository = addressRepository;
         this.identifyTraceRepository = identifyTraceRepository;
+        this.adminDetailsRepository = adminDetailsRepository;
 
         try {
             String myEncryptionKey = "H.D.SACHIN DILSHAN NANDANA";
@@ -340,7 +342,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public IdentifyTraceDTO dailyCheckToDo(IdentifyTraceDTO identifyTraceDTO) throws ParseException {
+    public IdentifyTraceDTO dailyCheckToDo(IdentifyTraceDTO identifyTraceDTO) {
         List<IdentifyTrace> identifyTrace = identifyTraceRepository.findAllByEmailAndStatus(identifyTraceDTO.getEmail(), ACTIVE);
 
         if (!identifyTrace.isEmpty()) {
@@ -529,6 +531,21 @@ public class UserServiceImpl implements UserService {
             log.error(e.getMessage());
         }
         return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    @Override
+    public AdminDTO adminLogin(AdminDTO adminDTO) {
+        adminDTO.setCreated(new Date());
+        AdminDetails adminDetails = adminDetailsRepository.findByEmail(adminDTO.getEmail());
+
+        log.info("UserServiceImpl :: adminLogin :: ADMIN DETAILS :" + adminDetails.toString());
+
+        if (decryptPassword(adminDetails.getPassword()).equals(adminDTO.getPassword())) {
+            log.info("ADMIN PASSWORD IS CORRECT!!");
+            adminDTO.setLogged(true);
+        }
+
+        return adminDTO;
     }
 
 }

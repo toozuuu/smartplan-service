@@ -1,9 +1,6 @@
 package net.smartplan.fitness.service;
 
-import net.smartplan.fitness.dto.AddressDTO;
-import net.smartplan.fitness.dto.IdentifyTraceDTO;
-import net.smartplan.fitness.dto.UpdateUserStatusDTO;
-import net.smartplan.fitness.dto.UserDTO;
+import net.smartplan.fitness.dto.*;
 
 import java.io.ByteArrayInputStream;
 import java.text.ParseException;
@@ -36,4 +33,5 @@ public interface UserService {
 
     ByteArrayInputStream getUserReport();
 
+    AdminDTO adminLogin(AdminDTO adminDTO);
 }
