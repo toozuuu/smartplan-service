@@ -21,7 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.spec.KeySpec;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -542,6 +541,34 @@ public class UserServiceImpl implements UserService {
             log.info("ADMIN PASSWORD IS CORRECT!!");
             adminDTO.setLogged(true);
         }
+
+        return adminDTO;
+    }
+
+    @Override
+    public List<AdminDTO> getAdminDetails() {
+        List<AdminDTO> adminDTOS = new ArrayList<>();
+        Iterable<AdminDetails> all = adminDetailsRepository.findAll();
+        all.forEach(adminDetails -> {
+            AdminDTO adminDTO = modelMapperUtil.convertToDTO(adminDetails);
+            adminDTO.setPassword(decryptPassword(adminDTO.getPassword()));
+            adminDTOS.add(adminDTO);
+        });
+        return adminDTOS;
+    }
+
+    @Override
+    public AdminDTO updateAdminDetails(AdminDTO adminDTO) {
+        AdminDetails adminDetails = adminDetailsRepository.findByEmail(adminDTO.getEmail());
+
+        if (adminDetails.getEmail() != null) {
+            adminDTO.setUpdatedAdmin(true);
+            adminDetailsRepository.deleteAll();
+            adminDTO.setPassword(encryptPassword(adminDTO.getPassword()));
+            adminDetailsRepository.save(modelMapperUtil.convertToEntity(adminDTO));
+        }
+
+        adminDTO.setPassword(decryptPassword(adminDTO.getPassword()));
 
         return adminDTO;
     }

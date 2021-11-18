@@ -81,6 +81,18 @@ public class UserController {
         return userService.adminLogin(adminDTO);
     }
 
+    @GetMapping("/getAdminDetails")
+    public List<AdminDTO> getAdminDetails() {
+        return userService.getAdminDetails();
+    }
+
+
+    @PostMapping("/adminDetails/update")
+    public AdminDTO updateAdminDetails(@RequestBody AdminDTO adminDTO) {
+        return userService.updateAdminDetails(adminDTO);
+    }
+
+
     @GetMapping("/generateExcel/report")
     public ResponseEntity<InputStreamResource> excelGenerator() {
 

@@ -106,4 +106,13 @@ public class ModelMapperUtil {
     public CartDTO convertToDTO(Cart cart) {
         return modelMapper.map(cart, CartDTO.class);
     }
+
+    public AdminDTO convertToDTO(AdminDetails admin) {
+        return modelMapper.map(admin, AdminDTO.class);
+    }
+
+    public AdminDetails convertToEntity(AdminDTO adminDTO) {
+        return modelMapper.map(adminDTO, AdminDetails.class);
+    }
+
 }

@@ -34,4 +34,8 @@ public interface UserService {
     ByteArrayInputStream getUserReport();
 
     AdminDTO adminLogin(AdminDTO adminDTO);
+
+    List<AdminDTO> getAdminDetails();
+
+    AdminDTO updateAdminDetails(AdminDTO adminDTO);
 }
