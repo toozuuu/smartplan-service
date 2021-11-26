@@ -45,7 +45,7 @@ public class EmailServiceImpl implements EmailService {
             messageHelper.setFrom(emailFrom);
             messageHelper.setTo(recipient);
             messageHelper.setCc("sachindilshan040@gmail.com");
-            messageHelper.setSubject("Smart-Plan Product Purchase");
+            messageHelper.setSubject("Smart Plan Meal Purchase");
             messageHelper.setText(content,true);
         };
         try {
@@ -59,7 +59,7 @@ public class EmailServiceImpl implements EmailService {
         Context context = new Context();
         context.setVariable("product_name", list.get(0).getName());
         context.setVariable("order_id", orderId);
-        context.setVariable("recipient", recipient);
+        context.setVariable("recipient", recipient +',');
         context.setVariable("order_date",new Date());
         context.setVariable("total_amount","$ .".concat(total));
         context.setVariable("address",address);
