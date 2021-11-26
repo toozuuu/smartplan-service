@@ -386,7 +386,10 @@ public class UserServiceImpl implements UserService {
 
             return dto;
         }
-        return new IdentifyTraceDTO();
+
+        IdentifyTraceDTO dto = new IdentifyTraceDTO();
+        dto.setStatus(EXPIRED);
+        return dto;
     }
 
     @Override
@@ -418,7 +421,9 @@ public class UserServiceImpl implements UserService {
             return dto;
         }
 
-        return new IdentifyTraceDTO();
+        IdentifyTraceDTO dto = new IdentifyTraceDTO();
+        dto.setStatus(EXPIRED);
+        return dto;
     }
 
 
