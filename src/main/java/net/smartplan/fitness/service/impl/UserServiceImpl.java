@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService {
     private static final String UNICODE_FORMAT = "UTF8";
     public static final String DEEDED_ENCRYPTION_SCHEME = "DESede";
     public static final String ACTIVE = "ACTIVE";
+    public static final String PENDING = "PENDING";
     public static final String DISABLED = "DISABLED";
     public static final String EXPIRED = "EXPIRED";
     private Cipher cipher;
@@ -342,7 +343,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public IdentifyTraceDTO dailyCheckToDo(IdentifyTraceDTO identifyTraceDTO) {
-        List<IdentifyTrace> identifyTrace = identifyTraceRepository.findAllByEmailAndStatus(identifyTraceDTO.getEmail(), ACTIVE);
+        List<IdentifyTrace> identifyTrace = identifyTraceRepository.findAllByEmailAndStatus(identifyTraceDTO.getEmail(), PENDING);
 
         if (!identifyTrace.isEmpty()) {
 
@@ -360,7 +361,7 @@ public class UserServiceImpl implements UserService {
                     double tempDays = trace.getGoalDays() - 1;
 
                     if (tempDays > 0) {
-                        dto.setStatus(ACTIVE);
+                        dto.setStatus(PENDING);
                         dto.setGoalDays(trace.getGoalDays() - 1);
                     } else {
                         dto.setStatus(EXPIRED);
@@ -369,15 +370,16 @@ public class UserServiceImpl implements UserService {
 
                     dto.setId(trace.getId());
                     dto.setDailyStatus(false);
-                    dto.setClickedToDo(true);
                     dto.setUpdated(new Date());
                     dto.setEmail(trace.getEmail());
                     dto.setCreated(trace.getCreated());
                     dto.setGoalExpiredDate(trace.getGoalExpiredDate());
-                    dto.setStatus(ACTIVE);
+                    dto.setStatus(PENDING);
+                    dto.setClickedToday(true);
 
                     identifyTraceRepository.save(modelMapperUtil.convertToEntity(dto));
                 } else {
+                    dto.setClickedToday(false);
                     dto.setStatus(DISABLED);
                 }
             }
@@ -389,7 +391,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public IdentifyTraceDTO checkDailyStatus(String email) {
-        List<IdentifyTrace> identifyTrace = identifyTraceRepository.findAllByEmailAndStatus(email, ACTIVE);
+        List<IdentifyTrace> identifyTrace = identifyTraceRepository.findAllByEmailAndStatus(email, PENDING);
 
         if (!identifyTrace.isEmpty()) {
             IdentifyTraceDTO dto = new IdentifyTraceDTO();
@@ -397,11 +399,16 @@ public class UserServiceImpl implements UserService {
             for (IdentifyTrace trace : identifyTrace) {
                 SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
 
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
+                String date1 = sdf.format(new Date());
+                String date2 = sdf.format(trace.getUpdated());
+
+                dto.setClickedToday(date1.equals(date2));
+
                 dto.setEmail(trace.getEmail());
                 dto.setCreated(trace.getCreated());
                 dto.setGoalExpiredDate(trace.getGoalExpiredDate());
                 dto.setId(trace.getId());
-                dto.setClickedToDo(trace.getClickedToDo());
                 dto.setDailyStatus(fmt.format(new Date()).equals(fmt.format((trace.getUpdated()))));
                 dto.setStatus(trace.getStatus());
                 dto.setGoalDays(trace.getGoalDays());
