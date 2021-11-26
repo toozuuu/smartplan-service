@@ -14,6 +14,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -37,10 +38,10 @@ public class EmailServiceImpl implements EmailService {
 
 
     @Override
-    public void sendEmailWithTemplate(List<EmailBodyDTO> list, String recipient, double total, String address) {
+    public void sendEmailWithTemplate(List<EmailBodyDTO> list, String recipient, double total, String address,String orderId) {
         MimeMessagePreparator mimeMessagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-            String content = setTemplateContent(list,Double.toString(total), address);
+            String content = setTemplateContent(list,Double.toString(total), address,orderId,recipient);
             messageHelper.setFrom(emailFrom);
             messageHelper.setTo(recipient);
             messageHelper.setCc("sachindilshan040@gmail.com");
@@ -54,10 +55,13 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
-    public String setTemplateContent(List<EmailBodyDTO> list, String total, String address) {
+    public String setTemplateContent(List<EmailBodyDTO> list, String total, String address,String orderId,String recipient) {
         Context context = new Context();
-        context.setVariable("products", list);
-        context.setVariable("total_amount","RS .".concat(total));
+        context.setVariable("product_name", list.get(0).getName());
+        context.setVariable("order_id", orderId);
+        context.setVariable("recipient", recipient);
+        context.setVariable("order_date",new Date());
+        context.setVariable("total_amount","$ .".concat(total));
         context.setVariable("address",address);
         return templateEngine.process("confirmOrder", context);
     }

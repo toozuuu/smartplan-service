@@ -75,7 +75,7 @@ public class PurchaseServiceImpl implements PurchaseService {
             bodyDTOS.add(createDTO(name, detail.getQuantity(), detail.getPrice()));
 
         });
-        emailService.sendEmailWithTemplate(bodyDTOS, purchase.getEmail(), totalPrice[0], address[0]);
+        emailService.sendEmailWithTemplate(bodyDTOS, purchase.getEmail(), totalPrice[0], address[0],purchase.getPurchaseId());
         return mapperUtil.convertToDTO(purchase);
     }
 

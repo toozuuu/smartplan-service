@@ -12,5 +12,5 @@ import java.util.List;
 
 public interface EmailService {
 
-    void sendEmailWithTemplate(List<EmailBodyDTO> list, String recipient, double total, String address);
+    void sendEmailWithTemplate(List<EmailBodyDTO> list, String recipient, double total, String address,String orderId);
 }
