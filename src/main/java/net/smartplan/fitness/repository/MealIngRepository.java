@@ -3,7 +3,6 @@ package net.smartplan.fitness.repository;
 import net.smartplan.fitness.entity.MealIngredients;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
 
 /**
  * @author H.D. Sachin Dilshan
