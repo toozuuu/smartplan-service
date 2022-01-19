@@ -57,7 +57,7 @@ public class CartServiceImpl implements CartService {
         final double[] totalPrice = {0};
 
         carts.forEach(detail -> {
-            totalPrice[0] += detail.getUnitPrice()*detail.getQuantity();
+            totalPrice[0] += detail.getUnitPrice() * detail.getQuantity();
             cartDTOS.add(modelMapperUtil.convertToDTO(detail));
         });
         dto.setTotalPrice(totalPrice[0]);

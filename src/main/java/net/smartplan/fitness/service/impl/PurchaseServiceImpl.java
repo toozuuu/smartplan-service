@@ -165,15 +165,15 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         CellStyle headerCellStyle = workbook.createCellStyle();
         headerCellStyle.setFont(headerFont);
-        // Row for Header
+
         Row headerRow = sheet.createRow(0);
-        // Header
+
         for (int col = 0; col < columns.length; col++) {
             Cell cell = headerRow.createCell(col);
             cell.setCellValue(columns[col]);
             cell.setCellStyle(headerCellStyle);
         }
-        // CellStyle for Age
+
         CellStyle ageCellStyle = workbook.createCellStyle();
         ageCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("#"));
         List<PurchaseDetailsDTO> list = fetchAllPurchaseDetails();

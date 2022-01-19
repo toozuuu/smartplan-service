@@ -15,9 +15,6 @@ class FitnessApplicationTests {
 
 	private static final String UNICODE_FORMAT = "UTF8";
 	public static final String DEEDED_ENCRYPTION_SCHEME = "DESede";
-	public static final String ACTIVE = "ACTIVE";
-	public static final String DISABLED = "DISABLED";
-	public static final String EXPIRED = "EXPIRED";
 	private Cipher cipher;
 	byte[] arrayBytes;
 	SecretKey key;

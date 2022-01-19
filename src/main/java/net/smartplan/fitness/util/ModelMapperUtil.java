@@ -95,10 +95,6 @@ public class ModelMapperUtil {
         return modelMapper.map(unitType, UnitTypeDTO.class);
     }
 
-    public PurchaseDetailsDTO convertToEntity(PurchaseDetails purchaseDetails) {
-        return modelMapper.map(purchaseDetails, PurchaseDetailsDTO.class);
-    }
-
     public Cart convertToEntity(CartDTO cartDTO) {
         return modelMapper.map(cartDTO, Cart.class);
     }
