@@ -129,6 +129,7 @@ public class UserServiceImpl implements UserService {
             long diff = Math.abs(parse2.getTime() - parse1.getTime());
 
             identifyTraceDTO.setGoalDays((double) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
+            identifyTraceDTO.setCreated(new Date(new Date().getTime() - 24*60*60*1000));
             identifyTraceDTO.setUpdated(new Date(new Date().getTime() - 24*60*60*1000));
 
             identifyTraceRepository.save(modelMapperUtil.convertToEntity(identifyTraceDTO));
