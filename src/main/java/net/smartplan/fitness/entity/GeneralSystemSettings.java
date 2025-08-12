@@ -4,8 +4,8 @@ import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.persistence.*;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 import java.util.Objects;
 
