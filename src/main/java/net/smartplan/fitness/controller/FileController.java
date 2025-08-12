@@ -45,8 +45,9 @@ public class FileController {
         FileStorage fileDetails = fileStorageRepository.findByFileId(fileId);
         if (fileDetails == null) {
             log.info("Requested resource is not found! {}", fileId);
-            return null;
+            return ResponseEntity.notFound().build();
         }
+
         Resource resource = fileService.loadFileAsResource(fileDetails.getAbsolutePath());
 
         if (resource == null) {
